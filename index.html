@@ -7,6 +7,17 @@
     <title>Mazo Automóveis</title>
 
     <style>
+        :root {
+            --primary-color: #1a1a1a;
+            --accent-color: #25D366;
+            --accent-hover: #1faa55;
+            --bg-color: #f4f6f8;
+            --card-bg: #ffffff;
+            --text-color: #333333;
+            --text-muted: #666666;
+            --border-radius: 10px;
+        }
+
         * {
             margin: 0;
             padding: 0;
@@ -14,198 +25,318 @@
         }
 
         body {
-            font-family: Arial, sans-serif;
-            background-color: #f4f4f4;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
             padding: 20px;
         }
 
-        h1 {
-            text-align: center;
-            margin-bottom: 20px;
-            color: #222;
-        }
-
-        #busca {
-            width: 100%;
-            max-width: 600px;
-            display: block;
+        header {
+            max-width: 1200px;
             margin: 0 auto 30px;
-            padding: 12px;
-            border: 1px solid #ccc;
-            border-radius: 8px;
-            font-size: 16px;
+            text-align: center;
         }
 
-        .carros {
+        header h1 {
+            font-size: 2rem;
+            color: var(--primary-color);
+            margin-bottom: 20px;
+        }
+
+        /* Controles de Filtro */
+        .filtros-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 12px;
+            justify-content: center;
+            max-width: 900px;
+            margin: 0 auto;
+        }
+
+        .input-busca, .select-filtro {
+            padding: 12px 16px;
+            border: 1px solid #ddd;
+            border-radius: var(--border-radius);
+            font-size: 15px;
+            outline: none;
+            background-color: #fff;
+            transition: border-color 0.2s, box-shadow 0.2s;
+        }
+
+        .input-busca {
+            flex: 1 1 300px;
+        }
+
+        .select-filtro {
+            flex: 1 1 180px;
+            cursor: pointer;
+        }
+
+        .input-busca:focus, .select-filtro:focus {
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 3px rgba(0, 0, 0, 0.05);
+        }
+
+        /* Grid de Carros */
+        .carros-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
-            gap: 20px;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 25px;
+            max-width: 1200px;
+            margin: 0 auto;
         }
 
-        .carro {
-            background: white;
-            border-radius: 12px;
+        .carro-card {
+            background: var(--card-bg);
+            border-radius: var(--border-radius);
             overflow: hidden;
-            box-shadow: 0 2px 8px rgba(0, 0, 0, .15);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+            display: flex;
+            flex-direction: column;
+            cursor: pointer;
         }
 
-        .carro img {
+        .carro-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.12);
+        }
+
+        .carro-img-wrapper {
+            position: relative;
             width: 100%;
-            height: 220px;
+            height: 200px;
+            background-color: #eee;
+        }
+
+        .carro-img-wrapper img {
+            width: 100%;
+            height: 100%;
             object-fit: cover;
         }
 
-        .info {
-            padding: 15px;
+        .carro-info {
+            padding: 18px;
+            display: flex;
+            flex-direction: column;
+            flex-grow: 1;
         }
 
-        .info h2 {
-            margin-bottom: 10px;
+        .carro-titulo {
+            font-size: 1.25rem;
+            font-weight: 700;
+            margin-bottom: 12px;
+            color: var(--primary-color);
         }
 
-        .info p {
-            margin-bottom: 5px;
+        /* Badges/Especificações */
+        .specs-badges {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 6px;
+            margin-bottom: 15px;
+        }
+
+        .badge {
+            background-color: #f0f0f0;
+            color: var(--text-muted);
+            padding: 4px 8px;
+            border-radius: 6px;
+            font-size: 12px;
+            font-weight: 500;
         }
 
         .preco {
-            color: green;
-            font-size: 24px;
-            font-weight: bold;
-            margin-top: 10px;
+            color: #107c41;
+            font-size: 1.4rem;
+            font-weight: 700;
+            margin-top: auto;
+            margin-bottom: 15px;
         }
 
-        .whatsapp {
+        .btn-whatsapp {
             display: block;
             text-align: center;
-            background: #25D366;
+            background: var(--accent-color);
             color: white;
             text-decoration: none;
             padding: 12px;
-            margin-top: 15px;
-            border-radius: 8px;
-            font-weight: bold;
+            border-radius: var(--border-radius);
+            font-weight: 600;
+            transition: background 0.2s ease;
         }
 
-        .whatsapp:hover {
-            background: #1faa55;
+        .btn-whatsapp:hover {
+            background: var(--accent-hover);
         }
 
-        .vazio {
+        .mensagem-alerta {
+            grid-column: 1 / -1;
             text-align: center;
-            color: #666;
-            margin-top: 30px;
+            color: var(--text-muted);
+            padding: 40px 0;
+            font-size: 1.1rem;
         }
     </style>
 </head>
 
 <body>
 
-    <h1>🚗 Mazo Automóveis</h1>
+    <header>
+        <h1>🚗 Mazo Automóveis</h1>
+        
+        <div class="filtros-container">
+            <input 
+                type="text" 
+                id="busca" 
+                class="input-busca" 
+                placeholder="Buscar por marca ou modelo..." 
+            />
+            
+            <select id="filtroCambio" class="select-filtro">
+                <option value="">Todos os Câmbios</option>
+                <option value="Manual">Manual</option>
+                <option value="Automático">Automático</option>
+            </select>
 
-    <input
-        type="text"
-        id="busca"
-        placeholder="Pesquisar veículo por marca ou modelo">
+            <select id="ordenacao" class="select-filtro">
+                <option value="padrao">Ordenar por</option>
+                <option value="preco-asc">Menor Preço</option>
+                <option value="preco-desc">Maior Preço</option>
+                <option value="ano-desc">Mais NovoS (Ano)</option>
+            </select>
+        </div>
+    </header>
 
-    <div class="carros" id="carros"></div>
+    <main class="carros-grid" id="carros"></main>
 
     <script>
-
         const SUPABASE_URL = "https://jzpshjdwspuslzkhljuz.supabase.co";
-
         const SUPABASE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imp6cHNoamR3c3B1c2x6a2hsanV6Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODkwMjAzNDcsImV4cCI6MjEwNDU5NjM0N30.WCR4PkCwJpVMijtRboBtIL1QD90c5gVWcY47qer9OUA";
+        const TELEFONE_WHATSAPP = "5527999999999";
 
-        async function carregarVeiculos() {
+        // Armazena a lista completa de veículos na memória local
+        let veiculosCache = [];
+
+        // Inicialização
+        document.addEventListener('DOMContentLoaded', () => {
+            configurarEventos();
+            buscarVeiculos();
+        });
+
+        function configurarEventos() {
+            document.getElementById('busca').addEventListener('input', aplicarFiltrosERenderizar);
+            document.getElementById('filtroCambio').addEventListener('change', aplicarFiltrosERenderizar);
+            document.getElementById('ordenacao').addEventListener('change', aplicarFiltrosERenderizar);
+        }
+
+        async function buscarVeiculos() {
+            const carrosContainer = document.getElementById('carros');
+            carrosContainer.innerHTML = '<p class="mensagem-alerta">Carregando veículos...</p>';
 
             try {
-
-                const resposta = await fetch(
-                    `${SUPABASE_URL}/rest/v1/veiculos?select=*`,
-                    {
-                        headers: {
-                            apikey: SUPABASE_KEY,
-                            Authorization: `Bearer ${SUPABASE_KEY}`
-                        }
+                const resposta = await fetch(`${SUPABASE_URL}/rest/v1/veiculos?select=*`, {
+                    headers: {
+                        apikey: SUPABASE_KEY,
+                        Authorization: `Bearer ${SUPABASE_KEY}`
                     }
-                );
-
-                const veiculos = await resposta.json();
-
-                const textoBusca = document
-                    .getElementById('busca')
-                    .value
-                    .toLowerCase();
-
-                const filtrados = veiculos.filter(v =>
-                    `${v.marca} ${v.modelo}`
-                        .toLowerCase()
-                        .includes(textoBusca)
-                );
-
-                const carrosDiv = document.getElementById('carros');
-
-                carrosDiv.innerHTML = '';
-
-                if (filtrados.length === 0) {
-                    carrosDiv.innerHTML =
-                        `<p class="vazio">Nenhum veículo encontrado.</p>`;
-                    return;
-                }
-
-                filtrados.forEach(v => {
-
-                    carrosDiv.innerHTML += `
-                        <div
-    			class="carro"
-    			onclick="window.location='detalhes.html?id=${v.id}'"
-    			style="cursor:pointer;">
-
-                            <img src="${v.foto_url || 'https://via.placeholder.com/600x400?text=Sem+Foto'}">
-
-                            <div class="info">
-
-                                <h2>${v.marca} ${v.modelo}</h2>
-
-                                <p><strong>Ano:</strong> ${v.ano || ''}</p>
-
-                                <p><strong>KM:</strong> ${v.km || ''}</p>
-
-                                <p><strong>Câmbio:</strong> ${v.cambio || ''}</p>
-
-                                <p><strong>Combustível:</strong> ${v.combustivel || ''}</p>
-
-                                <div class="preco">
-                                    R$ ${Number(v.preco).toLocaleString('pt-BR')}
-                                </div>
-
-                                <a
-                                    class="whatsapp"
-                                    target="_blank"
-                                    href="https://wa.me/5527999999999?text=Olá, tenho interesse no ${v.marca} ${v.modelo}">
-                                    Tenho Interesse
-                                </a>
-
-                            </div>
-
-                        </div>
-                    `;
                 });
 
+                if (!resposta.ok) throw new Error('Falha ao conectar com o banco de dados');
+
+                veiculosCache = await resposta.json();
+                aplicarFiltrosERenderizar();
+
             } catch (erro) {
-
                 console.error(erro);
-
-                document.getElementById('carros').innerHTML =
-                    "<p class='vazio'>Erro ao carregar veículos.</p>";
+                carrosContainer.innerHTML = '<p class="mensagem-alerta">Erro ao carregar os veículos. Tente novamente mais tarde.</p>';
             }
         }
 
-        document
-            .getElementById('busca')
-            .addEventListener('input', carregarVeiculos);
+        function aplicarFiltrosERenderizar() {
+            const textoBusca = document.getElementById('busca').value.trim().toLowerCase();
+            const cambioSelecionado = document.getElementById('filtroCambio').value;
+            const ordenacaoSelecionada = document.getElementById('ordenacao').value;
 
-        carregarVeiculos();
+            // 1. Filtragem
+            let resultado = veiculosCache.filter(v => {
+                const nomeCompleto = `${v.marca || ''} ${v.modelo || ''}`.toLowerCase();
+                const atendeBusca = nomeCompleto.includes(textoBusca);
+                const atendeCambio = cambioSelecionado === '' || (v.cambio && v.cambio.toLowerCase() === cambioSelecionado.toLowerCase());
 
+                return atendeBusca && atendeCambio;
+            });
+
+            // 2. Ordenação
+            if (ordenacaoSelecionada === 'preco-asc') {
+                resultado.sort((a, b) => (Number(a.preco) || 0) - (Number(b.preco) || 0));
+            } else if (ordenacaoSelecionada === 'preco-desc') {
+                resultado.sort((a, b) => (Number(b.preco) || 0) - (Number(a.preco) || 0));
+            } else if (ordenacaoSelecionada === 'ano-desc') {
+                resultado.sort((a, b) => (Number(b.ano) || 0) - (Number(a.ano) || 0));
+            }
+
+            // 3. Renderização na Tela
+            renderizarCards(resultado);
+        }
+
+        function renderizarCards(veiculos) {
+            const carrosContainer = document.getElementById('carros');
+            carrosContainer.innerHTML = '';
+
+            if (veiculos.length === 0) {
+                carrosContainer.innerHTML = '<p class="mensagem-alerta">Nenhum veículo encontrado com os filtros selecionados.</p>';
+                return;
+            }
+
+            veiculos.forEach(v => {
+                const precoFormatado = v.preco 
+                    ? `R$ ${Number(v.preco).toLocaleString('pt-BR')}` 
+                    : 'Sob Consulta';
+
+                const kmFormatado = v.km 
+                    ? `${Number(v.km).toLocaleString('pt-BR')} km` 
+                    : null;
+
+                const fotoUrl = v.foto_url || 'https://via.placeholder.com/600x400?text=Sem+Foto';
+                const mensagemWhatsApp = encodeURIComponent(`Olá, tenho interesse no ${v.marca} ${v.modelo}`);
+
+                const cardHtml = `
+                    <article class="carro-card" onclick="irParaDetalhes('${v.id}')">
+                        <div class="carro-img-wrapper">
+                            <img src="${fotoUrl}" alt="${v.marca} ${v.modelo}" loading="lazy">
+                        </div>
+                        <div class="carro-info">
+                            <h2 class="carro-titulo">${v.marca || ''} ${v.modelo || 'Veículo'}</h2>
+                            
+                            <div class="specs-badges">
+                                ${v.ano ? `<span class="badge">Ano: ${v.ano}</span>` : ''}
+                                ${kmFormatado ? `<span class="badge">${kmFormatado}</span>` : ''}
+                                ${v.cambio ? `<span class="badge">${v.cambio}</span>` : ''}
+                                ${v.combustivel ? `<span class="badge">${v.combustivel}</span>` : ''}
+                            </div>
+
+                            <div class="preco">${precoFormatado}</div>
+
+                            <a 
+                                class="btn-whatsapp" 
+                                target="_blank" 
+                                rel="noopener noreferrer"
+                                href="https://wa.me/${TELEFONE_WHATSAPP}?text=${mensagemWhatsApp}"
+                                onclick="event.stopPropagation();">
+                                Tenho Interesse
+                            </a>
+                        </div>
+                    </article>
+                `;
+
+                carrosContainer.insertAdjacentHTML('beforeend', cardHtml);
+            });
+        }
+
+        function irParaDetalhes(id) {
+            window.location.href = `detalhes.html?id=${id}`;
+        }
     </script>
 
 </body>
