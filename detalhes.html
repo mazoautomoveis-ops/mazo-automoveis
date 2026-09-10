@@ -4,143 +4,183 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Detalhes do Veículo</title>
+    <title>Detalhes do Veículo - Mazo Automóveis</title>
 
     <style>
-
-        body{
+        body {
             font-family: Arial, sans-serif;
-            max-width:900px;
-            margin:auto;
-            padding:20px;
-            background:#f4f4f4;
+            background: #f4f4f4;
+            margin: 0;
+            padding: 20px;
         }
 
-        .card{
-            background:white;
-            border-radius:12px;
-            overflow:hidden;
-            box-shadow:0 2px 8px rgba(0,0,0,.15);
+        .container {
+            max-width: 1000px;
+            margin: auto;
         }
 
-        img{
-            width:100%;
-            max-height:500px;
-            object-fit:cover;
+        .card {
+            background: white;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 3px 10px rgba(0,0,0,.15);
         }
 
-        .conteudo{
-            padding:20px;
+        .foto {
+            width: 100%;
+            max-height: 550px;
+            object-fit: cover;
         }
 
-        h1{
-            margin-bottom:15px;
+        .conteudo {
+            padding: 25px;
         }
 
-        p{
-            margin-bottom:10px;
+        h1 {
+            margin-top: 0;
+            color: #222;
         }
 
-        .preco{
-            color:green;
-            font-size:32px;
-            font-weight:bold;
-            margin-top:20px;
+        .info {
+            margin-bottom: 10px;
+            font-size: 18px;
         }
 
-        .whatsapp{
-            display:block;
-            width:100%;
-            text-align:center;
-            background:#25D366;
-            color:white;
-            text-decoration:none;
-            padding:15px;
-            border-radius:8px;
-            margin-top:20px;
-            font-weight:bold;
+        .preco {
+            margin-top: 20px;
+            font-size: 34px;
+            font-weight: bold;
+            color: #198754;
         }
 
+        .descricao {
+            margin-top: 20px;
+            line-height: 1.6;
+        }
+
+        .whatsapp {
+            display: block;
+            margin-top: 25px;
+            background: #25D366;
+            color: white;
+            text-decoration: none;
+            text-align: center;
+            padding: 15px;
+            border-radius: 8px;
+            font-weight: bold;
+            font-size: 18px;
+        }
+
+        .voltar {
+            display: inline-block;
+            margin-bottom: 20px;
+            color: #0d6efd;
+            text-decoration: none;
+        }
+
+        .erro {
+            text-align: center;
+            color: red;
+            font-size: 20px;
+            margin-top: 50px;
+        }
     </style>
-
 </head>
 
 <body>
 
-<div id="veiculo"></div>
+    <div class="container">
 
-<script>
+        index.html
+            ← Voltar para o catálogo
+        </a>
 
-const SUPABASE_URL =
-"https://jzpshjdwspuslzkhljuz.supabase.co";
+        <div id="veiculo"></div>
 
-const SUPABASE_KEY =
-"SUA_CHAVE_ANON";
+    </div>
 
-const parametros =
-new URLSearchParams(window.location.search);
+    js/config.jsscript>
 
-const id = parametros.get("id");
+    <script>
 
-async function carregarVeiculo() {
+        const parametros =
+            new URLSearchParams(window.location.search);
 
-    const resposta = await fetch(
-        `${SUPABASE_URL}/rest/v1/veiculos?id=eq.${id}&select=*`,
-        {
-            headers: {
-                apikey: SUPABASE_KEY,
-                Authorization: `Bearer ${SUPABASE_KEY}`
-            }
-        }
-    );
+        const id = parametros.get("id");
 
-    const dados = await resposta.json();
+        async function carregarVeiculo() {
 
-    const v = dados[0];
+            try {
 
-    document.getElementById("veiculo").innerHTML = `
-    
-        <div class="card">
+                const resposta = await fetch(
+                    `${SUPABASE_URL}/rest/v1/veiculos?id=eq.${id}&select=*`,
+                    {
+                        headers: {
+                            apikey: SUPABASE_KEY,
+                            Authorization: `Bearer ${SUPABASE_KEY}`
+                        }
+                    }
+                );
 
-            <img src="${v.foto_url}">
+                if (!resposta.ok) {
+                    throw new Error("Erro ao consultar veículo.");
+                }
 
-            <div class="conteudo">
+                const dados = await resposta.json();
 
-                <h1>${v.marca} ${v.modelo}</h1>
+                if (!dados.length) {
 
-                <p><strong>Ano:</strong> ${v.ano}</p>
+                    document.getElementById("veiculo").innerHTML = `
+                        <div class="erro">
+                            Veículo não encontrado.
+                        </div>
+                    `;
 
-                <p><strong>KM:</strong> ${v.km}</p>
+                    return;
+                }
 
-                <p><strong>Combustível:</strong> ${v.combustivel}</p>
+                const v = dados[0];
 
-                <p><strong>Câmbio:</strong> ${v.cambio}</p>
+                document.getElementById("veiculo").innerHTML = `
+                
+                    <div class="card">
 
-                <p><strong>Descrição:</strong><br>${v.descricao || ''}</p>
+                        <img
+                            class="foto"
+                            src="${v.foto_url || 'https://via.placeholder.com/1200x700?text=Sem+Foto'}">
 
-                <div class="preco">
-                    R$ ${Number(v.preco).toLocaleString('pt-BR')}
-                </div>
+                        <div class="conteudo">
 
-                <a
-                    class="whatsapp"
-                    target="_blank"
-                    href="https://wa.me/5527999999999?text=Olá, tenho interesse no ${v.marca} ${v.modelo}">
-                    Tenho Interesse
-                </a>
+                            <h1>
+                                ${v.marca} ${v.modelo}
+                            </h1>
 
-            </div>
+                            <div class="info">
+                                <strong>Ano:</strong> ${v.ano || '-'}
+                            </div>
 
-        </div>
+                            <div class="info">
+                                <strong>KM:</strong> ${v.km || '-'}
+                            </div>
 
-    `;
+                            <div class="info">
+                                <strong>Combustível:</strong> ${v.combustivel || '-'}
+                            </div>
 
-}
+                            <div class="info">
+                                <strong>Câmbio:</strong> ${v.cambio || '-'}
+                            </div>
 
-carregarVeiculo();
+                            <div class="descricao">
+                                <strong>Descrição:</strong><br>
+                                ${v.descricao || 'Sem descrição cadastrada.'}
+                            </div>
 
-</script>
+                            <div class="preco">
+                                R$ ${Number(v.preco).toLocaleString('pt-BR')}
+                            </div>
 
-</body>
-
-</html>
+                            <a
+                                class="whatsapp"
+                                target="_blank"
+                                href="https://wa.me/5527999999999?text=Olá! Tenho interesse
