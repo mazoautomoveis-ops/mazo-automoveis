@@ -92,7 +92,25 @@
 
         .btn-action { padding: 6px 10px; border: none; border-radius: 4px; font-size: 0.8rem; cursor: pointer; font-weight: 600; margin-right: 5px; }
         .btn-vendido { background: #fbbc04; color: #202124; }
+        .btn-disponivel { background: #137333; color: white; }
+        .btn-editar { background: #1a73e8; color: white; }
         .btn-excluir { background: #d93025; color: white; }
+
+        /* MODAL DE EDIÇÃO */
+        .modal-overlay {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.5); display: none; justify-content: center;
+            align-items: center; z-index: 1000; padding: 20px;
+        }
+
+        .modal-content {
+            background: white; padding: 25px; border-radius: var(--border-radius);
+            max-width: 800px; width: 100%; max-height: 90vh; overflow-y: auto;
+            position: relative;
+        }
+
+        .modal-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; border-bottom: 1px solid var(--wm-border); padding-bottom: 10px; }
+        .btn-close-modal { background: none; border: none; font-size: 1.5rem; cursor: pointer; color: var(--wm-text-muted); }
     </style>
 </head>
 
@@ -167,7 +185,6 @@
                             </select>
                         </div>
 
-                        <!-- UPLOAD DE IMAGENS -->
                         <div class="form-group col-span-2">
                             <label>Foto de Capa (Principal)</label>
                             <input type="file" id="fotoCapaInput" class="form-control" accept="image/*" required>
@@ -209,6 +226,70 @@
 
     </div>
 
+    <!-- MODAL DE EDIÇÃO -->
+    <div id="modalEditar" class="modal-overlay">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Editar Veículo</h3>
+                <button class="btn-close-modal" onclick="fecharModalEditar()">&times;</button>
+            </div>
+            <form id="formEditar">
+                <input type="hidden" id="editId">
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label>Marca</label>
+                        <input type="text" id="editMarca" class="form-control" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Modelo</label>
+                        <input type="text" id="editModelo" class="form-control" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Ano</label>
+                        <input type="number" id="editAno" class="form-control">
+                    </div>
+                    <div class="form-group">
+                        <label>Preço (R$)</label>
+                        <input type="number" id="editPreco" class="form-control">
+                    </div>
+                    <div class="form-group">
+                        <label>Cor</label>
+                        <input type="text" id="editCor" class="form-control">
+                    </div>
+                    <div class="form-group">
+                        <label>KM</label>
+                        <input type="number" id="editKm" class="form-control">
+                    </div>
+                    <div class="form-group">
+                        <label>Câmbio</label>
+                        <select id="editCambio" class="form-control">
+                            <option value="Manual">Manual</option>
+                            <option value="Automático">Automático</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>Combustível</label>
+                        <select id="editCombustivel" class="form-control">
+                            <option value="Flex">Flex</option>
+                            <option value="Gasolina">Gasolina</option>
+                            <option value="Diesel">Diesel</option>
+                            <option value="Elétrico">Elétrico</option>
+                        </select>
+                    </div>
+                    <div class="form-group col-span-2">
+                        <label>Substituir Foto de Capa (Opcional)</label>
+                        <input type="file" id="editFotoCapaInput" class="form-control" accept="image/*">
+                    </div>
+                    <div class="form-group col-span-2">
+                        <label>Descrição Detalhada</label>
+                        <textarea id="editDescricao" class="form-control" rows="3"></textarea>
+                    </div>
+                </div>
+                <button type="submit" id="btnSalvarEdicao" class="btn-primary" style="margin-top: 15px;">Atualizar Informações</button>
+            </form>
+        </div>
+    </div>
+
     <script type="module">
         import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js/+esm';
 
@@ -216,12 +297,11 @@
         const SUPABASE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imp6cHNoamR3c3B1c2x6a2hsanV6Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODkwMjAzNDcsImV4cCI6MjEwNDU5NjM0N30.WCR4PkCwJpVMijtRboBtIL1QD90c5gVWcY47qer9OUA";
 
         const supabase = createClient(SUPABASE_URL, SUPABASE_KEY);
+        let estoqueCache = [];
 
         document.addEventListener('DOMContentLoaded', async () => {
             const { data: { session } } = await supabase.auth.getSession();
-            if (session) {
-                exibirPainel();
-            }
+            if (session) exibirPainel();
         });
 
         document.getElementById('formLogin').addEventListener('submit', async (e) => {
@@ -273,11 +353,9 @@
             btn.innerText = "Enviando imagens e salvando...";
 
             try {
-                // 1. Upload da Capa
                 const fileCapa = document.getElementById('fotoCapaInput').files[0];
                 let fotoCapaUrl = await uploadArquivo(fileCapa);
 
-                // 2. Upload da Galeria
                 const filesGaleria = document.getElementById('fotosGaleriaInput').files;
                 let galeriaUrls = [];
 
@@ -286,7 +364,6 @@
                     galeriaUrls.push(url);
                 }
 
-                // 3. Cadastrar no Banco
                 const novoCarro = {
                     marca: document.getElementById('marca').value,
                     modelo: document.getElementById('modelo').value,
@@ -303,7 +380,6 @@
                 };
 
                 const { error } = await supabase.from('veiculos').insert([novoCarro]);
-
                 if (error) throw error;
 
                 alert("Veículo cadastrado com sucesso!");
@@ -332,17 +408,24 @@
                 return;
             }
 
-            if (veiculos.length === 0) {
+            estoqueCache = veiculos || [];
+
+            if (estoqueCache.length === 0) {
                 tbody.innerHTML = '<tr><td colspan="5">Nenhum veículo cadastrado.</td></tr>';
                 return;
             }
 
             tbody.innerHTML = '';
-            veiculos.forEach(v => {
+            estoqueCache.forEach(v => {
                 const precoFmt = v.preco ? `R$ ${Number(v.preco).toLocaleString('pt-BR')}` : 'N/A';
-                const statusTag = v.status === 'vendido' 
+                const isVendido = v.status === 'vendido';
+                const statusTag = isVendido 
                     ? '<span class="badge-status badge-vendido">Vendido</span>' 
                     : '<span class="badge-status badge-disponivel">Disponível</span>';
+
+                const btnStatusHTML = isVendido
+                    ? `<button class="btn-action btn-disponivel" onclick="alterarStatus('${v.id}', 'disponivel')">Disponibilizar</button>`
+                    : `<button class="btn-action btn-vendido" onclick="alterarStatus('${v.id}', 'vendido')">Vendido</button>`;
 
                 const tr = document.createElement('tr');
                 tr.innerHTML = `
@@ -351,7 +434,8 @@
                     <td>${precoFmt}</td>
                     <td>${statusTag}</td>
                     <td>
-                        ${v.status !== 'vendido' ? `<button class="btn-action btn-vendido" onclick="marcarVendido('${v.id}')">Vendido</button>` : ''}
+                        ${btnStatusHTML}
+                        <button class="btn-action btn-editar" onclick="abrirModalEditar('${v.id}')">Editar</button>
                         <button class="btn-action btn-excluir" onclick="excluirVeiculo('${v.id}')">Excluir</button>
                     </td>
                 `;
@@ -359,13 +443,87 @@
             });
         }
 
-        window.marcarVendido = async function(id) {
-            if (confirm("Deseja marcar este veículo como VENDIDO?")) {
-                const { error } = await supabase.from('veiculos').update({ status: 'vendido' }).eq('id', id);
-                if (error) alert("Erro: " + error.message);
+        // Alternar entre Vendido e Disponível
+        window.alterarStatus = async function(id, novoStatus) {
+            const acao = novoStatus === 'vendido' ? 'VENDIDO' : 'DISPONÍVEL';
+            if (confirm(`Deseja alterar o status deste veículo para ${acao}?`)) {
+                const { error } = await supabase
+                    .from('veiculos')
+                    .update({ status: novoStatus })
+                    .eq('id', id);
+
+                if (error) alert("Erro ao atualizar status: " + error.message);
                 else carregarTabelaEstoque();
             }
         }
+
+        // Modal e Edição de Dados
+        window.abrirModalEditar = function(id) {
+            const v = estoqueCache.find(item => String(item.id) === String(id));
+            if (!v) return;
+
+            document.getElementById('editId').value = v.id;
+            document.getElementById('editMarca').value = v.marca || '';
+            document.getElementById('editModelo').value = v.modelo || '';
+            document.getElementById('editAno').value = v.ano || '';
+            document.getElementById('editPreco').value = v.preco || '';
+            document.getElementById('editCor').value = v.cor || '';
+            document.getElementById('editKm').value = v.km || '';
+            document.getElementById('editCambio').value = v.cambio || 'Manual';
+            document.getElementById('editCombustivel').value = v.combustivel || 'Flex';
+            document.getElementById('editDescricao').value = v.descricao || '';
+
+            document.getElementById('modalEditar').style.display = 'flex';
+        }
+
+        window.fecharModalEditar = function() {
+            document.getElementById('modalEditar').style.display = 'none';
+        }
+
+        document.getElementById('formEditar').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const btn = document.getElementById('btnSalvarEdicao');
+            btn.disabled = true;
+            btn.innerText = "Atualizando...";
+
+            try {
+                const id = document.getElementById('editId').value;
+                const fileCapa = document.getElementById('editFotoCapaInput').files[0];
+
+                const dadosAtualizados = {
+                    marca: document.getElementById('editMarca').value,
+                    modelo: document.getElementById('editModelo').value,
+                    ano: document.getElementById('editAno').value ? Number(document.getElementById('editAno').value) : null,
+                    preco: document.getElementById('editPreco').value ? Number(document.getElementById('editPreco').value) : null,
+                    cor: document.getElementById('editCor').value,
+                    km: document.getElementById('editKm').value ? Number(document.getElementById('editKm').value) : null,
+                    cambio: document.getElementById('editCambio').value,
+                    combustivel: document.getElementById('editCombustivel').value,
+                    descricao: document.getElementById('editDescricao').value
+                };
+
+                if (fileCapa) {
+                    dadosAtualizados.foto_url = await uploadArquivo(fileCapa);
+                }
+
+                const { error } = await supabase
+                    .from('veiculos')
+                    .update(dadosAtualizados)
+                    .eq('id', id);
+
+                if (error) throw error;
+
+                alert("Veículo atualizado com sucesso!");
+                fecharModalEditar();
+                carregarTabelaEstoque();
+
+            } catch (err) {
+                alert("Erro ao editar: " + err.message);
+            } finally {
+                btn.disabled = false;
+                btn.innerText = "Atualizar Informações";
+            }
+        });
 
         window.excluirVeiculo = async function(id) {
             if (confirm("Tem certeza que deseja EXCLUIR permanentemente este veículo?")) {
