@@ -1,5 +1,3 @@
-const SUPABASE_URL =
-"https://jzpshjdwspuslzkhljuz.supabase.co";
+const SUPABASE_URL = "https://jzpshjdwspuslzkhljuz.supabase.co";
 
-const SUPABASE_KEY =
-"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imp6cHNoamR3c3B1c2x6a2hsanV6Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODkwMjAzNDcsImV4cCI6MjEwNDU5NjM0N30.WCR4PkCwJpVMijtRboBtIL1QD90c5gVWcY47qer9OUA";
+const SUPABASE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imp6cHNoamR3c3B1c2x6a2hsanV6Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODkwMjAzNDcsImV4cCI6MjEwNDU5NjM0N30.WCR4PkCwJpVMijtRboBtIL1QD90c5gVWcY47qer9OUA";

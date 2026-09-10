@@ -1,104 +1,15 @@
-<!DOCTYPE html>
-<html lang="pt-BR">
-
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Detalhes do Veículo - Mazo Automóveis</title>
-
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            background: #f4f4f4;
-            margin: 0;
-            padding: 20px;
-        }
-
-        .container {
-            max-width: 1000px;
-            margin: 0 auto;
-        }
-
-        .voltar {
-            display: inline-block;
-            margin-bottom: 20px;
-            text-decoration: none;
-            color: #0d6efd;
-            font-weight: bold;
-        }
-
-        .card {
-            background: white;
-            border-radius: 12px;
-            overflow: hidden;
-            box-shadow: 0 2px 8px rgba(0,0,0,.15);
-        }
-
-        .foto {
-            width: 100%;
-            max-height: 500px;
-            object-fit: cover;
-        }
-
-        .conteudo {
-            padding: 25px;
-        }
-
-        h1 {
-            margin-top: 0;
-        }
-
-        .info {
-            margin-bottom: 10px;
-            font-size: 18px;
-        }
-
-        .descricao {
-            margin-top: 20px;
-            line-height: 1.6;
-        }
-
-        .preco {
-            margin-top: 25px;
-            color: green;
-            font-size: 36px;
-            font-weight: bold;
-        }
-
-        .whatsapp {
-            display: block;
-            background: #25D366;
-            color: white;
-            text-align: center;
-            text-decoration: none;
-            padding: 15px;
-            margin-top: 25px;
-            border-radius: 8px;
-            font-weight: bold;
-        }
-
-        .erro {
-            color: red;
-            text-align: center;
-            font-size: 20px;
-            padding: 50px;
-        }
-    </style>
-</head>
-
 <body>
 
     <div class="container">
 
-        index.html
-            ← Voltar para o catálogo
+        <a href="index.html" classoltar para o catálogo
         </a>
 
         <div id="veiculo"></div>
 
     </div>
 
-    js/config.jsscript>
+    <script src="cript>
 
     <script>
 
@@ -107,96 +18,23 @@
 
         async function carregarVeiculo() {
 
-            try {
-
-                const resposta = await fetch(
-                    `${SUPABASE_URL}/rest/v1/veiculos?id=eq.${id}&select=*`,
-                    {
-                        headers: {
-                            apikey: SUPABASE_KEY,
-                            Authorization: `Bearer ${SUPABASE_KEY}`
-                        }
+            const resposta = await fetch(
+                `${SUPABASE_URL}/rest/v1/veiculos?id=eq.${id}&select=*`,
+                {
+                    headers: {
+                        apikey: SUPABASE_KEY,
+                        Authorization: `Bearer ${SUPABASE_KEY}`
                     }
-                );
-
-                if (!resposta.ok) {
-                    throw new Error("Erro ao consultar veículo.");
                 }
+            );
 
-                const dados = await resposta.json();
+            const dados = await resposta.json();
 
-                if (!dados.length) {
+            const v = dados[0];
 
-                    document.getElementById("veiculo").innerHTML = `
-                        <div class="erro">
-                            Veículo não encontrado.
-                        </div>
-                    `;
-
-                    return;
-                }
-
-                const v = dados[0];
-
-                document.getElementById("veiculo").innerHTML = `
-                    <div class="card">
-
-                        <img
-                            class="foto"
-                            src="${v.foto_url || 'https://via.placeholder.com/1200x700?text=Sem+Foto'}"
-                            alt="${v.marca} ${v.modelo}">
-
-                        <div class="conteudo">
-
-                            <h1>${v.marca} ${v.modelo}</h1>
-
-                            <div class="info">
-                                <strong>Ano:</strong> ${v.ano || '-'}
-                            </div>
-
-                            <div class="info">
-                                <strong>KM:</strong> ${v.km || '-'}
-                            </div>
-
-                            <div class="info">
-                                <strong>Combustível:</strong> ${v.combustivel || '-'}
-                            </div>
-
-                            <div class="info">
-                                <strong>Câmbio:</strong> ${v.cambio || '-'}
-                            </div>
-
-                            <div class="descricao">
-                                <strong>Descrição:</strong><br>
-                                ${v.descricao || 'Sem descrição cadastrada.'}
-                            </div>
-
-                            <div class="preco">
-                                R$ ${Number(v.preco).toLocaleString('pt-BR')}
-                            </div>
-
-                            <a
-                                class="whatsapp"
-                                target="_blank"
-                                href="https://wa.me/5527999999999?text=Olá! Tenho interesse no veículo ${v.marca} ${v.modelo}.">
-                                Tenho Interesse pelo WhatsApp
-                            </a>
-
-                        </div>
-
-                    </div>
-                `;
-
-            } catch (erro) {
-
-                console.error(erro);
-
-                document.getElementById("veiculo").innerHTML = `
-                    <div class="erro">
-                        Erro ao carregar os dados do veículo.
-                    </div>
-                `;
-            }
+            document.getElementById("veiculo").innerHTML = `
+                <h1>${v.marca} ${v.modelo}</h1>
+            `;
         }
 
         carregarVeiculo();
@@ -204,5 +42,3 @@
     </script>
 
 </body>
-
-</html>
