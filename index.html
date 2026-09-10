@@ -8,14 +8,14 @@
 
     <style>
         :root {
-            --wm-red: #e62e00;
-            --wm-red-hover: #cc2900;
-            --wm-dark: #1e1f29;
-            --wm-gray-bg: #f3f5f8;
+            --wm-red: #d30000;
+            --wm-red-hover: #b00000;
+            --wm-dark: #0d0d0d;
+            --wm-gray-bg: #f4f6f9;
             --wm-card-bg: #ffffff;
-            --wm-text-dark: #2e2d33;
-            --wm-text-muted: #75788a;
-            --wm-border: #e2e8f0;
+            --wm-text-dark: #1a1a1a;
+            --wm-text-muted: #666666;
+            --wm-border: #e0e0e0;
             --border-radius: 8px;
         }
 
@@ -29,23 +29,23 @@
         }
 
         .navbar {
-            background-color: var(--wm-dark); color: white; padding: 18px 20px;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.1); margin-bottom: 25px;
+            background-color: var(--wm-dark); color: white; padding: 12px 20px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15); margin-bottom: 25px;
+            border-bottom: 3px solid var(--wm-red);
         }
 
         .navbar-content {
             max-width: 1200px; margin: 0 auto; display: flex; align-items: center; justify-content: space-between;
         }
 
-        .logo { font-size: 1.5rem; font-weight: 800; color: white; text-decoration: none; letter-spacing: 0.5px; }
+        .logo-img { height: 50px; width: auto; object-fit: contain; }
 
         .container { max-width: 1200px; margin: 0 auto; padding: 0 20px; flex: 1; width: 100%; }
 
-        /* BUSCA E FILTROS */
         .busca-card {
             background: white; padding: 20px; border-radius: var(--border-radius);
             border: 1px solid var(--wm-border); margin-bottom: 25px;
-            display: grid; grid-template-columns: 2fr 1fr 1fr; gap: 15px; align-items: center;
+            display: grid; grid-template-columns: 2fr 1fr; gap: 15px; align-items: center;
         }
 
         @media (max-width: 768px) { .busca-card { grid-template-columns: 1fr; } }
@@ -57,7 +57,6 @@
 
         .form-control:focus { border-color: var(--wm-red); }
 
-        /* GRID DE VEÍCULOS (LADO A LADO) */
         .grid-veiculos {
             display: grid;
             grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
@@ -73,29 +72,21 @@
         }
 
         .card-carro:hover {
-            transform: translateY(-4px); box-shadow: 0 10px 20px rgba(0,0,0,0.08);
+            transform: translateY(-4px); box-shadow: 0 10px 20px rgba(0,0,0,0.1);
         }
 
-        .img-wrapper {
-            position: relative; width: 100%; height: 200px; background-color: #111;
-        }
-
+        .img-wrapper { position: relative; width: 100%; height: 200px; background-color: #111; }
         .img-wrapper img { width: 100%; height: 100%; object-fit: cover; }
 
         .badge-status-card {
-            position: absolute; top: 10px; right: 10px; background: rgba(0,0,0,0.75);
+            position: absolute; top: 10px; right: 10px; background: rgba(0,0,0,0.8);
             color: white; padding: 4px 8px; border-radius: 4px; font-size: 0.75rem;
             font-weight: 700; text-transform: uppercase;
         }
 
-        .badge-vendido-card { background: var(--wm-red); }
-
         .card-body { padding: 15px; display: flex; flex-direction: column; flex: 1; }
-
         .card-titulo { font-size: 1.1rem; font-weight: 800; color: var(--wm-text-dark); margin-bottom: 5px; text-transform: uppercase; }
-
         .card-detalhes-linha { font-size: 0.85rem; color: var(--wm-text-muted); margin-bottom: 12px; }
-
         .card-preco { font-size: 1.3rem; font-weight: 800; color: var(--wm-red); margin-top: auto; padding-top: 10px; }
 
         .mensagem-alerta {
@@ -115,33 +106,23 @@
 
     <nav class="navbar">
         <div class="navbar-content">
-            <a href="index.html" class="logo">MAZO AUTOMÓVEIS</a>
+            <a href="index.html">
+                <img src="https://jzpshjdwspuslzkhljuz.supabase.co/storage/v1/object/public/fotos-veiculos/carros/WhatsApp%20Image%202025-01-28%20at%2016.14.57%20(2).jpeg" alt="Mazo Automóveis" class="logo-img">
+            </a>
         </div>
     </nav>
 
     <div class="container">
-        
-        <!-- BARRA DE BUSCA -->
         <div class="busca-card">
-            <input type="text" id="inputBusca" class="form-control" placeholder="Buscar por marca ou modelo..." oninput="filtrarVeiculos()">
-            
-            <select id="selectOrdenacao" class="form-control" onchange="filtrarVeiculos()">
-                <option value="recentes">Mais Recentes</option>
-                <option value="menor-preco">Menor Preço</option>
-                <option value="maior-preco">Maior Preço</option>
-            </select>
-
-            <select id="selectStatus" class="form-control" onchange="filtrarVeiculos()">
-                <option value="disponivel">Apenas Disponíveis</option>
-                <option value="todos">Todos (Inc. Vendidos)</option>
+            <input type="text" id="inputBusca" class="form-control" placeholder="Buscar por modelo ou palavra-chave..." oninput="filtrarVeiculos()">
+            <select id="selectMarca" class="form-control" onchange="filtrarVeiculos()">
+                <option value="todas">Todas as Marcas</option>
             </select>
         </div>
 
-        <!-- LISTA DE VEÍCULOS -->
         <main id="listaVeiculos" class="grid-veiculos">
             <div class="mensagem-alerta">Carregando estoque...</div>
         </main>
-
     </div>
 
     <footer class="footer">
@@ -181,6 +162,7 @@
                 if (!resposta.ok) throw new Error("Erro na requisição");
 
                 todosVeiculos = await resposta.json();
+                popularFiltroMarcas();
                 filtrarVeiculos();
 
             } catch (erro) {
@@ -189,31 +171,30 @@
             }
         }
 
+        function popularFiltroMarcas() {
+            const select = document.getElementById("selectMarca");
+            const marcas = [...new Set(todosVeiculos.map(v => v.marca).filter(Boolean))].sort();
+
+            select.innerHTML = '<option value="todas">Todas as Marcas</option>';
+            marcas.forEach(m => {
+                select.innerHTML += `<option value="${m}">${m}</option>`;
+            });
+        }
+
         function filtrarVeiculos() {
             const container = document.getElementById("listaVeiculos");
             const busca = document.getElementById("inputBusca").value.toLowerCase();
-            const ordenacao = document.getElementById("selectOrdenacao").value;
-            const statusFiltro = document.getElementById("selectStatus").value;
+            const marcaSelecionada = document.getElementById("selectMarca").value;
 
-            // 1. Filtrar por texto e status
             let filtrados = todosVeiculos.filter(v => {
                 const textoMatch = `${v.marca || ''} ${v.modelo || ''}`.toLowerCase().includes(busca);
-                const statusMatch = statusFiltro === 'todos' ? true : (v.status !== 'vendido');
-                return textoMatch && statusMatch;
+                const marcaMatch = marcaSelecionada === 'todas' ? true : (v.marca === marcaSelecionada);
+                const statusMatch = v.status !== 'vendido';
+                return textoMatch && marcaMatch && statusMatch;
             });
 
-            // 2. Ordenar
-            if (ordenacao === 'menor-preco') {
-                filtrados.sort((a, b) => (a.preco || 0) - (b.preco || 0));
-            } else if (ordenacao === 'maior-preco') {
-                filtrados.sort((a, b) => (b.preco || 0) - (a.preco || 0));
-            } else {
-                filtrados.sort((a, b) => b.id - a.id); // Recentes por ID
-            }
-
-            // 3. Renderizar
             if (filtrados.length === 0) {
-                container.innerHTML = `<div class="mensagem-alerta">Nenhum veículo encontrado com os filtros selecionados.</div>`;
+                container.innerHTML = `<div class="mensagem-alerta">Nenhum veículo encontrado.</div>`;
                 return;
             }
 
@@ -222,7 +203,6 @@
                 const foto = v.foto_url || 'https://via.placeholder.com/400x300?text=Sem+Foto';
                 const precoFmt = v.preco ? `R$ ${Number(v.preco).toLocaleString('pt-BR')}` : 'Sob Consulta';
                 const kmFmt = v.km ? `${Number(v.km).toLocaleString('pt-BR')} km` : 'KM N/A';
-                const isVendido = v.status === 'vendido';
 
                 const card = document.createElement("a");
                 card.className = "card-carro";
@@ -231,9 +211,7 @@
                 card.innerHTML = `
                     <div class="img-wrapper">
                         <img src="${foto}" alt="${v.marca} ${v.modelo}">
-                        ${isVendido 
-                            ? `<span class="badge-status-card badge-vendido-card">Vendido</span>` 
-                            : `<span class="badge-status-card">Disponível</span>`}
+                        <span class="badge-status-card">Disponível</span>
                     </div>
                     <div class="card-body">
                         <div class="card-titulo">${v.marca || ''} ${v.modelo || ''}</div>

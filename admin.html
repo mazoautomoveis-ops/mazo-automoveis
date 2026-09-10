@@ -7,14 +7,14 @@
     <title>Painel Admin - Mazo Automóveis</title>
     <style>
         :root {
-            --wm-red: #e62e00;
-            --wm-red-hover: #cc2900;
-            --wm-dark: #1e1f29;
-            --wm-gray-bg: #f3f5f8;
+            --wm-red: #d30000;
+            --wm-red-hover: #b00000;
+            --wm-dark: #0d0d0d;
+            --wm-gray-bg: #f4f6f9;
             --wm-card-bg: #ffffff;
-            --wm-text-dark: #2e2d33;
-            --wm-text-muted: #75788a;
-            --wm-border: #e2e8f0;
+            --wm-text-dark: #1a1a1a;
+            --wm-text-muted: #666666;
+            --wm-border: #e0e0e0;
             --border-radius: 8px;
         }
 
@@ -30,16 +30,17 @@
         .navbar {
             background-color: var(--wm-dark);
             color: white;
-            padding: 18px 20px;
+            padding: 12px 20px;
             display: flex;
             justify-content: space-between;
             align-items: center;
+            border-bottom: 3px solid var(--wm-red);
         }
 
-        .logo { font-size: 1.4rem; font-weight: 800; color: white; text-decoration: none; }
+        .logo-img { height: 45px; width: auto; object-fit: contain; }
 
         .btn-logout {
-            background: #4a4d5e; color: white; border: none; padding: 8px 16px;
+            background: #333; color: white; border: none; padding: 8px 16px;
             border-radius: 6px; cursor: pointer; font-weight: 600; display: none;
         }
 
@@ -62,20 +63,26 @@
         .form-control:focus { border-color: var(--wm-red); }
 
         .btn-primary {
-            width: 100%; background: var(--wm-red); color: white; border: none;
-            padding: 12px; border-radius: 6px; font-weight: 700; cursor: pointer;
+            background: var(--wm-red); color: white; border: none;
+            padding: 12px 20px; border-radius: 6px; font-weight: 700; cursor: pointer;
+            display: inline-block;
         }
 
         .btn-primary:hover { background: var(--wm-red-hover); }
 
         #painelAdmin { display: none; }
 
+        .admin-header-actions {
+            display: flex; justify-content: space-between; align-items: center;
+            margin-bottom: 20px; background: white; padding: 20px; border-radius: var(--border-radius);
+            border: 1px solid var(--wm-border);
+        }
+
         .admin-card {
             background: white; padding: 25px; border-radius: var(--border-radius);
             border: 1px solid var(--wm-border); margin-bottom: 30px;
         }
 
-        .admin-card h2 { margin-bottom: 20px; font-size: 1.2rem; border-bottom: 2px solid var(--wm-red); padding-bottom: 8px; display: inline-block; }
         .form-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 15px; }
         .col-span-2 { grid-column: span 2; }
 
@@ -96,10 +103,10 @@
         .btn-editar { background: #1a73e8; color: white; }
         .btn-excluir { background: #d93025; color: white; }
 
-        /* MODAL DE EDIÇÃO */
+        /* MODAIS */
         .modal-overlay {
             position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(0,0,0,0.5); display: none; justify-content: center;
+            background: rgba(0,0,0,0.6); display: none; justify-content: center;
             align-items: center; z-index: 1000; padding: 20px;
         }
 
@@ -117,7 +124,9 @@
 <body>
 
     <nav class="navbar">
-        <a href="index.html" class="logo">MAZO AUTOMÓVEIS - ADMIN</a>
+        <a href="index.html">
+            <img src="https://jzpshjdwspuslzkhljuz.supabase.co/storage/v1/object/public/fotos-veiculos/carros/WhatsApp%20Image%202025-01-28%20at%2016.14.57%20(2).jpeg" alt="Mazo Automóveis" class="logo-img">
+        </a>
         <button id="btnLogout" class="btn-logout" onclick="fazerLogout()">Sair</button>
     </nav>
 
@@ -134,78 +143,18 @@
                     <label>Senha</label>
                     <input type="password" id="loginSenha" class="form-control" required placeholder="******">
                 </div>
-                <button type="submit" class="btn-primary">Entrar no Painel</button>
+                <button type="submit" class="btn-primary" style="width: 100%;">Entrar no Painel</button>
             </form>
         </div>
 
         <div id="painelAdmin">
             
-            <div class="admin-card">
-                <h2>Cadastrar Novo Veículo</h2>
-                <form id="formCadastrar">
-                    <div class="form-grid">
-                        <div class="form-group">
-                            <label>Marca</label>
-                            <input type="text" id="marca" class="form-control" required placeholder="Ex: Chevrolet">
-                        </div>
-                        <div class="form-group">
-                            <label>Modelo</label>
-                            <input type="text" id="modelo" class="form-control" required placeholder="Ex: Onix 1.0">
-                        </div>
-                        <div class="form-group">
-                            <label>Ano</label>
-                            <input type="number" id="ano" class="form-control" placeholder="2022">
-                        </div>
-                        <div class="form-group">
-                            <label>Preço (R$)</label>
-                            <input type="number" id="preco" class="form-control" placeholder="65000">
-                        </div>
-                        <div class="form-group">
-                            <label>Cor</label>
-                            <input type="text" id="cor" class="form-control" placeholder="Preto">
-                        </div>
-                        <div class="form-group">
-                            <label>KM</label>
-                            <input type="number" id="km" class="form-control" placeholder="45000">
-                        </div>
-                        <div class="form-group">
-                            <label>Câmbio</label>
-                            <select id="cambio" class="form-control">
-                                <option value="Manual">Manual</option>
-                                <option value="Automático">Automático</option>
-                            </select>
-                        </div>
-                        <div class="form-group">
-                            <label>Combustível</label>
-                            <select id="combustivel" class="form-control">
-                                <option value="Flex">Flex</option>
-                                <option value="Gasolina">Gasolina</option>
-                                <option value="Diesel">Diesel</option>
-                                <option value="Elétrico">Elétrico</option>
-                            </select>
-                        </div>
-
-                        <div class="form-group col-span-2">
-                            <label>Foto de Capa (Principal)</label>
-                            <input type="file" id="fotoCapaInput" class="form-control" accept="image/*" required>
-                        </div>
-
-                        <div class="form-group col-span-2">
-                            <label>Outras Fotos (Galeria - Selecione várias)</label>
-                            <input type="file" id="fotosGaleriaInput" class="form-control" accept="image/*" multiple>
-                        </div>
-
-                        <div class="form-group col-span-2">
-                            <label>Descrição Detalhada</label>
-                            <textarea id="descricao" class="form-control" rows="3" placeholder="Informações adicionais do carro..."></textarea>
-                        </div>
-                    </div>
-                    <button type="submit" id="btnSalvar" class="btn-primary" style="margin-top: 15px;">Salvar Veículo</button>
-                </form>
+            <div class="admin-header-actions">
+                <h2>Gestão de Estoque</h2>
+                <button class="btn-primary" onclick="abrirModalCadastro()">+ Cadastrar Novo Veículo</button>
             </div>
 
             <div class="admin-card">
-                <h2>Estoque Cadastrado</h2>
                 <div class="table-responsive">
                     <table>
                         <thead>
@@ -224,6 +173,76 @@
 
         </div>
 
+    </div>
+
+    <!-- MODAL DE CADASTRO -->
+    <div id="modalCadastro" class="modal-overlay">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Cadastrar Novo Veículo</h3>
+                <button class="btn-close-modal" onclick="fecharModalCadastro()">&times;</button>
+            </div>
+            <form id="formCadastrar">
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label>Marca</label>
+                        <input type="text" id="marca" class="form-control" required placeholder="Ex: Chevrolet">
+                    </div>
+                    <div class="form-group">
+                        <label>Modelo</label>
+                        <input type="text" id="modelo" class="form-control" required placeholder="Ex: Onix 1.0">
+                    </div>
+                    <div class="form-group">
+                        <label>Ano</label>
+                        <input type="number" id="ano" class="form-control" placeholder="2022">
+                    </div>
+                    <div class="form-group">
+                        <label>Preço (R$)</label>
+                        <input type="number" id="preco" class="form-control" placeholder="65000">
+                    </div>
+                    <div class="form-group">
+                        <label>Cor</label>
+                        <input type="text" id="cor" class="form-control" placeholder="Preto">
+                    </div>
+                    <div class="form-group">
+                        <label>KM</label>
+                        <input type="number" id="km" class="form-control" placeholder="45000">
+                    </div>
+                    <div class="form-group">
+                        <label>Câmbio</label>
+                        <select id="cambio" class="form-control">
+                            <option value="Manual">Manual</option>
+                            <option value="Automático">Automático</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>Combustível</label>
+                        <select id="combustivel" class="form-control">
+                            <option value="Flex">Flex</option>
+                            <option value="Gasolina">Gasolina</option>
+                            <option value="Diesel">Diesel</option>
+                            <option value="Elétrico">Elétrico</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group col-span-2">
+                        <label>Foto de Capa (Principal)</label>
+                        <input type="file" id="fotoCapaInput" class="form-control" accept="image/*" required>
+                    </div>
+
+                    <div class="form-group col-span-2">
+                        <label>Outras Fotos (Galeria - Selecione várias)</label>
+                        <input type="file" id="fotosGaleriaInput" class="form-control" accept="image/*" multiple>
+                    </div>
+
+                    <div class="form-group col-span-2">
+                        <label>Descrição Detalhada</label>
+                        <textarea id="descricao" class="form-control" rows="3" placeholder="Informações adicionais do carro..."></textarea>
+                    </div>
+                </div>
+                <button type="submit" id="btnSalvar" class="btn-primary" style="margin-top: 15px; width: 100%;">Salvar Veículo</button>
+            </form>
+        </div>
     </div>
 
     <!-- MODAL DE EDIÇÃO -->
@@ -285,7 +304,7 @@
                         <textarea id="editDescricao" class="form-control" rows="3"></textarea>
                     </div>
                 </div>
-                <button type="submit" id="btnSalvarEdicao" class="btn-primary" style="margin-top: 15px;">Atualizar Informações</button>
+                <button type="submit" id="btnSalvarEdicao" class="btn-primary" style="margin-top: 15px; width: 100%;">Atualizar Informações</button>
             </form>
         </div>
     </div>
@@ -346,6 +365,16 @@
             return data.publicUrl;
         }
 
+        // Modais de Cadastro
+        window.abrirModalCadastro = function() {
+            document.getElementById('modalCadastro').style.display = 'flex';
+        }
+
+        window.fecharModalCadastro = function() {
+            document.getElementById('modalCadastro').style.display = 'none';
+            document.getElementById('formCadastrar').reset();
+        }
+
         document.getElementById('formCadastrar').addEventListener('submit', async (e) => {
             e.preventDefault();
             const btn = document.getElementById('btnSalvar');
@@ -383,7 +412,7 @@
                 if (error) throw error;
 
                 alert("Veículo cadastrado com sucesso!");
-                document.getElementById('formCadastrar').reset();
+                fecharModalCadastro();
                 carregarTabelaEstoque();
 
             } catch (err) {
@@ -443,7 +472,6 @@
             });
         }
 
-        // Alternar entre Vendido e Disponível
         window.alterarStatus = async function(id, novoStatus) {
             const acao = novoStatus === 'vendido' ? 'VENDIDO' : 'DISPONÍVEL';
             if (confirm(`Deseja alterar o status deste veículo para ${acao}?`)) {
@@ -457,7 +485,7 @@
             }
         }
 
-        // Modal e Edição de Dados
+        // Modais de Edição
         window.abrirModalEditar = function(id) {
             const v = estoqueCache.find(item => String(item.id) === String(id));
             if (!v) return;

@@ -8,14 +8,14 @@
 
     <style>
         :root {
-            --wm-red: #e62e00;
-            --wm-red-hover: #cc2900;
-            --wm-dark: #1e1f29;
-            --wm-gray-bg: #f3f5f8;
+            --wm-red: #d30000;
+            --wm-red-hover: #b00000;
+            --wm-dark: #0d0d0d;
+            --wm-gray-bg: #f4f6f9;
             --wm-card-bg: #ffffff;
-            --wm-text-dark: #2e2d33;
-            --wm-text-muted: #75788a;
-            --wm-border: #e2e8f0;
+            --wm-text-dark: #1a1a1a;
+            --wm-text-muted: #666666;
+            --wm-border: #e0e0e0;
             --border-radius: 8px;
         }
 
@@ -29,12 +29,13 @@
         }
 
         .navbar {
-            background-color: var(--wm-dark); color: white; padding: 18px 20px;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.1); margin-bottom: 30px;
+            background-color: var(--wm-dark); color: white; padding: 12px 20px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15); margin-bottom: 30px;
+            border-bottom: 3px solid var(--wm-red);
         }
 
         .navbar-content { max-width: 1100px; margin: 0 auto; display: flex; align-items: center; justify-content: space-between; }
-        .logo { font-size: 1.5rem; font-weight: 800; color: white; text-decoration: none; letter-spacing: 0.5px; }
+        .logo-img { height: 50px; width: auto; object-fit: contain; }
 
         .container { max-width: 1100px; margin: 0 auto 50px; padding: 0 20px; flex: 1; }
 
@@ -48,14 +49,12 @@
 
         @media (max-width: 850px) { .detalhe-grid { grid-template-columns: 1fr; } }
 
-        /* GALERIA DE FOTOS */
         .galeria-card {
             background-color: var(--wm-card-bg); border-radius: var(--border-radius);
             overflow: hidden; border: 1px solid var(--wm-border); margin-bottom: 25px;
         }
 
         .img-principal-wrapper { position: relative; width: 100%; height: 450px; background-color: #111; }
-
         .img-principal { width: 100%; height: 100%; object-fit: contain; display: block; }
 
         .thumbs-grid {
@@ -64,8 +63,8 @@
         }
 
         .thumb-item {
-            width: 80px; height: 60px; object-fit: cover; border-radius: 4px;
-            cursor: pointer; opacity: 0.6; border: 2px solid transparent; transition: all 0.2s;
+            width: 90px; height: 65px; object-fit: cover; border-radius: 4px;
+            cursor: pointer; opacity: 0.6; border: 2px solid transparent; transition: all 0.2s; flex-shrink: 0;
         }
 
         .thumb-item:hover, .thumb-item.active { opacity: 1; border-color: var(--wm-red); }
@@ -116,12 +115,14 @@
 
     <nav class="navbar">
         <div class="navbar-content">
-            <a href="index.html" class="logo">MAZO AUTOMÓVEIS</a>
+            <a href="index.html">
+                <img src="https://jzpshjdwspuslzkhljuz.supabase.co/storage/v1/object/public/fotos-veiculos/carros/WhatsApp%20Image%202025-01-28%20at%2016.14.57%20(2).jpeg" alt="Mazo Automóveis" class="logo-img">
+            </a>
         </div>
     </nav>
 
     <div class="container">
-        <a href="index.html" class="btn-voltar">← Voltar para a pesquisa</a>
+        <a href="index.html" class="btn-voltar">← Voltar para o estoque</a>
         <main id="conteudoVeiculo">
             <div class="mensagem-alerta">Carregando detalhes do veículo...</div>
         </main>
@@ -181,18 +182,29 @@
                 const precoFormatado = v.preco ? `R$ ${Number(v.preco).toLocaleString('pt-BR')}` : 'Sob Consulta';
                 const kmFormatado = v.km ? `${Number(v.km).toLocaleString('pt-BR')} km` : 'Não informado';
 
-                // Consolida fotos (capa + galeria)
-                const fotoCapa = v.foto_url || 'https://via.placeholder.com/800x500?text=Sem+Foto';
-                const galeria = v.fotos_galeria && Array.isArray(v.fotos_galeria) ? v.fotos_galeria : [];
-                const todasFotos = [fotoCapa, ...galeria];
+                let listaFotos = [];
+                if (v.foto_url) listaFotos.push(v.foto_url);
 
+                if (v.fotos_galeria) {
+                    let galeriaExtra = v.fotos_galeria;
+                    if (typeof galeriaExtra === 'string') {
+                        try { galeriaExtra = JSON.parse(galeriaExtra); } catch (e) {}
+                    }
+                    if (Array.isArray(galeriaExtra)) {
+                        listaFotos = listaFotos.concat(galeriaExtra);
+                    }
+                }
+
+                listaFotos = [...new Set(listaFotos)];
+
+                const fotoCapa = listaFotos[0] || 'https://via.placeholder.com/800x500?text=Sem+Foto';
                 const anoTexto = v.ano ? `Ano ${v.ano}` : 'Ano não informado';
                 const corTexto = v.cor ? `Cor ${v.cor}` : 'Cor não informada';
                 const mensagemWhatsApp = encodeURIComponent(`Olá! Tenho interesse no veículo ${v.marca} ${v.modelo} (${anoTexto}, ${corTexto} - Ref. ID: ${v.id}).`);
 
                 let htmlThumbs = '';
-                todasFotos.forEach((img, idx) => {
-                    htmlThumbs += `<img class="thumb-item ${idx === 0 ? 'active' : ''}" src="${img}" onclick="trocarFoto('${img}', this)">`;
+                listaFotos.forEach((imgUrl, idx) => {
+                    htmlThumbs += `<img class="thumb-item ${idx === 0 ? 'active' : ''}" src="${imgUrl}" onclick="trocarFoto('${imgUrl}', this)">`;
                 });
 
                 container.innerHTML = `
@@ -202,7 +214,7 @@
                                 <div class="img-principal-wrapper">
                                     <img id="imgDestaque" class="img-principal" src="${fotoCapa}" alt="${v.marca} ${v.modelo}">
                                 </div>
-                                ${todasFotos.length > 1 ? `<div class="thumbs-grid">${htmlThumbs}</div>` : ''}
+                                ${listaFotos.length > 1 ? `<div class="thumbs-grid">${htmlThumbs}</div>` : ''}
                             </div>
 
                             <div class="box-descricao">
