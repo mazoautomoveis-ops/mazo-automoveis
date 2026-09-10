@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Detalhes do Veículo</title>
+
+    <style>
+
+        body{
+            font-family: Arial, sans-serif;
+            max-width:900px;
+            margin:auto;
+            padding:20px;
+            background:#f4f4f4;
+        }
+
+        .card{
+            background:white;
+            border-radius:12px;
+            overflow:hidden;
+            box-shadow:0 2px 8px rgba(0,0,0,.15);
+        }
+
+        img{
+            width:100%;
+            max-height:500px;
+            object-fit:cover;
+        }
+
+        .conteudo{
+            padding:20px;
+        }
+
+        h1{
+            margin-bottom:15px;
+        }
+
+        p{
+            margin-bottom:10px;
+        }
+
+        .preco{
+            color:green;
+            font-size:32px;
+            font-weight:bold;
+            margin-top:20px;
+        }
+
+        .whatsapp{
+            display:block;
+            width:100%;
+            text-align:center;
+            background:#25D366;
+            color:white;
+            text-decoration:none;
+            padding:15px;
+            border-radius:8px;
+            margin-top:20px;
+            font-weight:bold;
+        }
+
+    </style>
+
+</head>
+
+<body>
+
+<div id="veiculo"></div>
+
+<script>
+
+const SUPABASE_URL =
+"https://jzpshjdwspuslzkhljuz.supabase.co";
+
+const SUPABASE_KEY =
+"SUA_CHAVE_ANON";
+
+const parametros =
+new URLSearchParams(window.location.search);
+
+const id = parametros.get("id");
+
+async function carregarVeiculo() {
+
+    const resposta = await fetch(
+        `${SUPABASE_URL}/rest/v1/veiculos?id=eq.${id}&select=*`,
+        {
+            headers: {
+                apikey: SUPABASE_KEY,
+                Authorization: `Bearer ${SUPABASE_KEY}`
+            }
+        }
+    );
+
+    const dados = await resposta.json();
+
+    const v = dados[0];
+
+    document.getElementById("veiculo").innerHTML = `
+    
+        <div class="card">
+
+            <img src="${v.foto_url}">
+
+            <div class="conteudo">
+
+                <h1>${v.marca} ${v.modelo}</h1>
+
+                <p><strong>Ano:</strong> ${v.ano}</p>
+
+                <p><strong>KM:</strong> ${v.km}</p>
+
+                <p><strong>Combustível:</strong> ${v.combustivel}</p>
+
+                <p><strong>Câmbio:</strong> ${v.cambio}</p>
+
+                <p><strong>Descrição:</strong><br>${v.descricao || ''}</p>
+
+                <div class="preco">
+                    R$ ${Number(v.preco).toLocaleString('pt-BR')}
+                </div>
+
+                <a
+                    class="whatsapp"
+                    target="_blank"
+                    href="https://wa.me/5527999999999?text=Olá, tenho interesse no ${v.marca} ${v.modelo}">
+                    Tenho Interesse
+                </a>
+
+            </div>
+
+        </div>
+
+    `;
+
+}
+
+carregarVeiculo();
+
+</script>
+
+</body>
+
+</html>

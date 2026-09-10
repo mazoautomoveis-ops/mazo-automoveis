@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Login Administrativo</title>
+
+<style>
+
+body{
+    font-family:Arial,sans-serif;
+    background:#f4f4f4;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    height:100vh;
+}
+
+.card{
+    background:white;
+    padding:30px;
+    border-radius:10px;
+    width:350px;
+}
+
+input{
+    width:100%;
+    padding:10px;
+    margin-bottom:10px;
+}
+
+button{
+    width:100%;
+    padding:12px;
+    background:#0d6efd;
+    color:white;
+    border:none;
+}
+
+</style>
+
+</head>
+<body>
+
+<div class="card">
+
+<h2>Mazo Automóveis</h2>
+
+<input
+id="email"
+type="email"
+placeholder="Email">
+
+<input
+id="senha"
+type="password"
+placeholder="Senha">
+
+<button onclick="login()">
+Entrar
+</button>
+
+<p id="msg"></p>
+
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js"></
+
+const supabase = window.supabase.createClient(
+    "https://jzpshjdwspuslzkhljuz.supabase.co",
+    "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imp6cHNoamR3c3B1c2x6a2hsanV6Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODkwMjAzNDcsImV4cCI6MjEwNDU5NjM0N30.WCR4PkCwJpVMijtRboBtIL1QD90c5gVWcY47qer9OUA"
+);
+
+async function login(){
+
+    const email =
+    document.getElementById("email").value;
+
+    const password =
+    document.getElementById("senha").value;
+
+    const { error } =
+    await supabase.auth.signInWithPassword({
+        email,
+        password
+    });
+
+    if(error){
+
+        document.getElementById("msg")
+        .innerText = "Login inválido";
+
+        return;
+    }
+
+    window.location = "admin.html";
+}
+
+</script>
+
+</body>
+</html>
