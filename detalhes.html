@@ -16,19 +16,27 @@
 
         .container {
             max-width: 1000px;
-            margin: auto;
+            margin: 0 auto;
+        }
+
+        .voltar {
+            display: inline-block;
+            margin-bottom: 20px;
+            text-decoration: none;
+            color: #0d6efd;
+            font-weight: bold;
         }
 
         .card {
             background: white;
             border-radius: 12px;
             overflow: hidden;
-            box-shadow: 0 3px 10px rgba(0,0,0,.15);
+            box-shadow: 0 2px 8px rgba(0,0,0,.15);
         }
 
         .foto {
             width: 100%;
-            max-height: 550px;
+            max-height: 500px;
             object-fit: cover;
         }
 
@@ -38,7 +46,6 @@
 
         h1 {
             margin-top: 0;
-            color: #222;
         }
 
         .info {
@@ -46,43 +53,35 @@
             font-size: 18px;
         }
 
-        .preco {
-            margin-top: 20px;
-            font-size: 34px;
-            font-weight: bold;
-            color: #198754;
-        }
-
         .descricao {
             margin-top: 20px;
             line-height: 1.6;
         }
 
-        .whatsapp {
-            display: block;
+        .preco {
             margin-top: 25px;
-            background: #25D366;
-            color: white;
-            text-decoration: none;
-            text-align: center;
-            padding: 15px;
-            border-radius: 8px;
+            color: green;
+            font-size: 36px;
             font-weight: bold;
-            font-size: 18px;
         }
 
-        .voltar {
-            display: inline-block;
-            margin-bottom: 20px;
-            color: #0d6efd;
+        .whatsapp {
+            display: block;
+            background: #25D366;
+            color: white;
+            text-align: center;
             text-decoration: none;
+            padding: 15px;
+            margin-top: 25px;
+            border-radius: 8px;
+            font-weight: bold;
         }
 
         .erro {
-            text-align: center;
             color: red;
+            text-align: center;
             font-size: 20px;
-            margin-top: 50px;
+            padding: 50px;
         }
     </style>
 </head>
@@ -103,9 +102,7 @@
 
     <script>
 
-        const parametros =
-            new URLSearchParams(window.location.search);
-
+        const parametros = new URLSearchParams(window.location.search);
         const id = parametros.get("id");
 
         async function carregarVeiculo() {
@@ -142,18 +139,16 @@
                 const v = dados[0];
 
                 document.getElementById("veiculo").innerHTML = `
-                
                     <div class="card">
 
                         <img
                             class="foto"
-                            src="${v.foto_url || 'https://via.placeholder.com/1200x700?text=Sem+Foto'}">
+                            src="${v.foto_url || 'https://via.placeholder.com/1200x700?text=Sem+Foto'}"
+                            alt="${v.marca} ${v.modelo}">
 
                         <div class="conteudo">
 
-                            <h1>
-                                ${v.marca} ${v.modelo}
-                            </h1>
+                            <h1>${v.marca} ${v.modelo}</h1>
 
                             <div class="info">
                                 <strong>Ano:</strong> ${v.ano || '-'}
@@ -183,4 +178,31 @@
                             <a
                                 class="whatsapp"
                                 target="_blank"
-                                href="https://wa.me/5527999999999?text=Olá! Tenho interesse
+                                href="https://wa.me/5527999999999?text=Olá! Tenho interesse no veículo ${v.marca} ${v.modelo}.">
+                                Tenho Interesse pelo WhatsApp
+                            </a>
+
+                        </div>
+
+                    </div>
+                `;
+
+            } catch (erro) {
+
+                console.error(erro);
+
+                document.getElementById("veiculo").innerHTML = `
+                    <div class="erro">
+                        Erro ao carregar os dados do veículo.
+                    </div>
+                `;
+            }
+        }
+
+        carregarVeiculo();
+
+    </script>
+
+</body>
+
+</html>
