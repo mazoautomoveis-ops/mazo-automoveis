@@ -4,18 +4,19 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Detalhes do Veículo - Mazo Automóveis</title>
+    <title>Detalhes do Veículo - Mazo Motors</title>
 
     <style>
         :root {
-            --primary-color: #1a1a1a;
-            --accent-color: #25D366;
-            --accent-hover: #1faa55;
-            --bg-color: #f4f6f8;
-            --card-bg: #ffffff;
-            --text-color: #333333;
-            --text-muted: #666666;
-            --border-radius: 10px;
+            --wm-red: #e62e00;
+            --wm-red-hover: #cc2900;
+            --wm-dark: #1e1f29;
+            --wm-gray-bg: #f3f5f8;
+            --wm-card-bg: #ffffff;
+            --wm-text-dark: #2e2d33;
+            --wm-text-muted: #75788a;
+            --wm-border: #e2e8f0;
+            --border-radius: 8px;
         }
 
         * {
@@ -25,128 +26,209 @@
         }
 
         body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background-color: var(--bg-color);
-            color: var(--text-color);
-            padding: 20px;
+            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+            background-color: var(--wm-gray-bg);
+            color: var(--wm-text-dark);
+            padding-bottom: 50px;
+        }
+
+        /* Navbar estilo Webmotors */
+        .navbar {
+            background-color: var(--wm-dark);
+            color: white;
+            padding: 15px 20px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            margin-bottom: 30px;
+        }
+
+        .navbar-content {
+            max-width: 1100px;
+            margin: 0 auto;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .logo {
+            font-size: 1.5rem;
+            font-weight: 800;
+            color: white;
+            text-decoration: none;
+        }
+
+        .logo span {
+            color: var(--wm-red);
         }
 
         .container {
-            max-width: 900px;
+            max-width: 1100px;
             margin: 0 auto;
+            padding: 0 20px;
         }
 
         .btn-voltar {
-            display: inline-block;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
             margin-bottom: 20px;
             text-decoration: none;
-            color: var(--primary-color);
+            color: var(--wm-text-muted);
             font-weight: 600;
-            font-size: 1rem;
+            font-size: 0.95rem;
             transition: color 0.2s;
         }
 
         .btn-voltar:hover {
-            color: #555;
+            color: var(--wm-red);
         }
 
-        .card-detalhes {
-            background-color: var(--card-bg);
+        /* Layout em Colunas (Estilo Webmotors Ficha Técnica + Contato) */
+        .detalhe-grid {
+            display: grid;
+            grid-template-columns: 2fr 1fr;
+            gap: 25px;
+        }
+
+        @media (max-width: 850px) {
+            .detalhe-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .galeria-card {
+            background-color: var(--wm-card-bg);
             border-radius: var(--border-radius);
             overflow: hidden;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+            border: 1px solid var(--wm-border);
+            margin-bottom: 25px;
         }
 
-        .img-detalhe {
+        .img-principal {
             width: 100%;
             max-height: 480px;
             object-fit: cover;
             background-color: #eee;
+            display: block;
         }
 
-        .info-detalhe {
-            padding: 30px;
-        }
-
-        .titulo-veiculo {
-            font-size: 2rem;
-            color: var(--primary-color);
-            margin-bottom: 10px;
-        }
-
-        .preco-veiculo {
-            font-size: 1.8rem;
-            color: #107c41;
-            font-weight: 700;
+        /* Seção da Descrição */
+        .box-descricao {
+            background-color: var(--wm-card-bg);
+            border-radius: var(--border-radius);
+            padding: 25px;
+            border: 1px solid var(--wm-border);
             margin-bottom: 25px;
         }
 
-        .grid-especificacoes {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
-            gap: 15px;
-            margin-bottom: 30px;
-            background-color: #f9f9f9;
-            padding: 20px;
+        .box-descricao h3 {
+            font-size: 1.2rem;
+            color: var(--wm-text-dark);
+            margin-bottom: 15px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid var(--wm-red);
+            display: inline-block;
+        }
+
+        .texto-descricao {
+            font-size: 0.95rem;
+            line-height: 1.6;
+            color: #4a4d5e;
+            white-space: pre-line; /* Mantém as quebras de linha enviadas no cadastro */
+        }
+
+        /* Sidebar de Preço e Contato */
+        .sidebar-compra {
+            background-color: var(--wm-card-bg);
             border-radius: var(--border-radius);
+            padding: 25px;
+            border: 1px solid var(--wm-border);
+            height: fit-content;
+            position: sticky;
+            top: 20px;
         }
 
-        .item-especificacao {
-            display: flex;
-            flex-direction: column;
-        }
-
-        .item-especificacao span {
-            font-size: 0.85rem;
-            color: var(--text-muted);
+        .titulo-veiculo {
+            font-size: 1.6rem;
+            font-weight: 800;
+            color: var(--wm-text-dark);
+            margin-bottom: 5px;
             text-transform: uppercase;
-            font-weight: 600;
         }
 
-        .item-especificacao strong {
-            font-size: 1.1rem;
-            color: var(--primary-color);
-            margin-top: 4px;
+        .preco-destaque {
+            font-size: 2rem;
+            font-weight: 800;
+            color: var(--wm-red);
+            margin: 15px 0 20px;
         }
 
-        .btn-whatsapp {
+        /* Tabela Ficha Técnica */
+        .ficha-tecnica {
+            margin-bottom: 25px;
+        }
+
+        .ficha-item {
+            display: flex;
+            justify-content: space-between;
+            padding: 10px 0;
+            border-bottom: 1px dashed var(--wm-border);
+            font-size: 0.9rem;
+        }
+
+        .ficha-item span {
+            color: var(--wm-text-muted);
+        }
+
+        .ficha-item strong {
+            color: var(--wm-text-dark);
+        }
+
+        .btn-whatsapp-wm {
             display: block;
             text-align: center;
-            background: var(--accent-color);
+            background: #25D366;
             color: white;
             text-decoration: none;
-            padding: 16px;
+            padding: 15px;
             border-radius: var(--border-radius);
             font-weight: 700;
-            font-size: 1.1rem;
+            font-size: 1rem;
             transition: background 0.2s ease;
         }
 
-        .btn-whatsapp:hover {
-            background: var(--accent-hover);
+        .btn-whatsapp-wm:hover {
+            background: #1faa55;
         }
 
         .mensagem-alerta {
             text-align: center;
-            color: var(--text-muted);
+            color: var(--wm-text-muted);
             padding: 60px 0;
             font-size: 1.2rem;
+            background: white;
+            border-radius: var(--border-radius);
         }
     </style>
 </head>
 
 <body>
 
-    <div class="container">
+    <nav class="navbar">
+        <div class="navbar-content">
+            <a href="index.html" class="logo">
+                🚗 MAZO<span>MOTORS</span>
+            </a>
+        </div>
+    </nav>
 
+    <div class="container">
         <a href="index.html" class="btn-voltar">
-            ← Voltar para o catálogo
+            ← Voltar para a pesquisa
         </a>
 
-        <main id="veiculo">
-            <p class="mensagem-alerta">Carregando detalhes do veículo...</p>
+        <main id="conteudoVeiculo">
+            <div class="mensagem-alerta">Carregando detalhes do veículo...</div>
         </main>
-
     </div>
 
     <script>
@@ -158,11 +240,10 @@
         const id = parametros.get("id");
 
         async function carregarVeiculo() {
-            const containerVeiculo = document.getElementById("veiculo");
+            const container = document.getElementById("conteudoVeiculo");
 
-            // Valida se o ID foi passado na URL
             if (!id) {
-                containerVeiculo.innerHTML = `<p class="mensagem-alerta">Veículo não encontrado.</p>`;
+                container.innerHTML = `<div class="mensagem-alerta">Veículo não encontrado.</div>`;
                 return;
             }
 
@@ -177,12 +258,12 @@
                     }
                 );
 
-                if (!resposta.ok) throw new Error("Erro ao consultar a API");
+                if (!resposta.ok) throw new Error("Erro na consulta");
 
                 const dados = await resposta.json();
 
                 if (!dados || dados.length === 0) {
-                    containerVeiculo.innerHTML = `<p class="mensagem-alerta">Veículo não encontrado.</p>`;
+                    container.innerHTML = `<div class="mensagem-alerta">Veículo não encontrado.</div>`;
                     return;
                 }
 
@@ -197,49 +278,68 @@
                     : 'Não informado';
 
                 const fotoUrl = v.foto_url || 'https://via.placeholder.com/800x500?text=Sem+Foto';
-                const mensagemWhatsApp = encodeURIComponent(`Olá! Tenho interesse no veículo ${v.marca} ${v.modelo} (Código ID: ${v.id}).`);
+                const mensagemWhatsApp = encodeURIComponent(`Olá! Tenho interesse no veículo ${v.marca} ${v.modelo} (Anúncio ID: ${v.id}).`);
 
-                containerVeiculo.innerHTML = `
-                    <article class="card-detalhes">
-                        <img class="img-detalhe" src="${fotoUrl}" alt="${v.marca} ${v.modelo}">
+                // Trata a coluna "descricao" do Supabase
+                const descricaoTexto = v.descricao && v.descricao.trim() !== '' 
+                    ? v.descricao 
+                    : 'Nenhuma descrição detalhada informada para este veículo.';
 
-                        <div class="info-detalhe">
-                            <h1 class="titulo-veiculo">${v.marca || ''} ${v.modelo || ''}</h1>
-                            <div class="preco-veiculo">${precoFormatado}</div>
-
-                            <div class="grid-especificacoes">
-                                <div class="item-especificacao">
-                                    <span>Ano</span>
-                                    <strong>${v.ano || 'Não informado'}</strong>
-                                </div>
-                                <div class="item-especificacao">
-                                    <span>Quilometragem</span>
-                                    <strong>${kmFormatado}</strong>
-                                </div>
-                                <div class="item-especificacao">
-                                    <span>Câmbio</span>
-                                    <strong>${v.cambio || 'Não informado'}</strong>
-                                </div>
-                                <div class="item-especificacao">
-                                    <span>Combustível</span>
-                                    <strong>${v.combustivel || 'Não informado'}</strong>
-                                </div>
+                container.innerHTML = `
+                    <div class="detalhe-grid">
+                        <!-- Coluna Esquerda: Imagem e Descrição -->
+                        <div>
+                            <div class="galeria-card">
+                                <img class="img-principal" src="${fotoUrl}" alt="${v.marca} ${v.modelo}">
                             </div>
 
-                            <a 
-                                class="btn-whatsapp" 
-                                target="_blank" 
-                                rel="noopener noreferrer"
-                                href="https://wa.me/${TELEFONE_WHATSAPP}?text=${mensagemWhatsApp}">
-                                Falar com Vendedor no WhatsApp
-                            </a>
+                            <div class="box-descricao">
+                                <h3>Descrição do Veículo</h3>
+                                <div class="texto-descricao">${descricaoTexto}</div>
+                            </div>
                         </div>
-                    </article>
+
+                        <!-- Coluna Direita: Informações e Contato -->
+                        <div>
+                            <div class="sidebar-compra">
+                                <h1 class="titulo-veiculo">${v.marca || ''} ${v.modelo || ''}</h1>
+                                
+                                <div class="preco-destaque">${precoFormatado}</div>
+
+                                <div class="ficha-tecnica">
+                                    <div class="ficha-item">
+                                        <span>Ano</span>
+                                        <strong>${v.ano || 'Não informado'}</strong>
+                                    </div>
+                                    <div class="ficha-item">
+                                        <span>KM</span>
+                                        <strong>${kmFormatado}</strong>
+                                    </div>
+                                    <div class="ficha-item">
+                                        <span>Câmbio</span>
+                                        <strong>${v.cambio || 'Não informado'}</strong>
+                                    </div>
+                                    <div class="ficha-item">
+                                        <span>Combustível</span>
+                                        <strong>${v.combustivel || 'Não informado'}</strong>
+                                    </div>
+                                </div>
+
+                                <a 
+                                    class="btn-whatsapp-wm" 
+                                    target="_blank" 
+                                    rel="noopener noreferrer"
+                                    href="https://wa.me/${TELEFONE_WHATSAPP}?text=${mensagemWhatsApp}">
+                                    Enviar Mensagem via WhatsApp
+                                </a>
+                            </div>
+                        </div>
+                    </div>
                 `;
 
             } catch (erro) {
                 console.error(erro);
-                containerVeiculo.innerHTML = `<p class="mensagem-alerta">Erro ao carregar os detalhes do veículo.</p>`;
+                container.innerHTML = `<div class="mensagem-alerta">Erro ao carregar detalhes do veículo.</div>`;
             }
         }
 
