@@ -19,229 +19,96 @@
             --border-radius: 8px;
         }
 
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
 
         body {
             font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
             background-color: var(--wm-gray-bg);
             color: var(--wm-text-dark);
-            display: flex;
-            flex-direction: column;
-            min-height: 100vh;
+            display: flex; flex-direction: column; min-height: 100vh;
         }
 
         .navbar {
-            background-color: var(--wm-dark);
-            color: white;
-            padding: 18px 20px;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
-            margin-bottom: 30px;
+            background-color: var(--wm-dark); color: white; padding: 18px 20px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1); margin-bottom: 30px;
         }
 
-        .navbar-content {
-            max-width: 1100px;
-            margin: 0 auto;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-        }
+        .navbar-content { max-width: 1100px; margin: 0 auto; display: flex; align-items: center; justify-content: space-between; }
+        .logo { font-size: 1.5rem; font-weight: 800; color: white; text-decoration: none; letter-spacing: 0.5px; }
 
-        .logo {
-            font-size: 1.5rem;
-            font-weight: 800;
-            color: white;
-            text-decoration: none;
-            letter-spacing: 0.5px;
-        }
-
-        .container {
-            max-width: 1100px;
-            margin: 0 auto 50px;
-            padding: 0 20px;
-            flex: 1;
-        }
+        .container { max-width: 1100px; margin: 0 auto 50px; padding: 0 20px; flex: 1; }
 
         .btn-voltar {
-            display: inline-flex;
-            align-items: center;
-            gap: 6px;
-            margin-bottom: 20px;
-            text-decoration: none;
-            color: var(--wm-text-muted);
-            font-weight: 600;
-            font-size: 0.95rem;
-            transition: color 0.2s;
+            display: inline-flex; align-items: center; gap: 6px; margin-bottom: 20px;
+            text-decoration: none; color: var(--wm-text-muted); font-weight: 600; font-size: 0.95rem;
         }
+        .btn-voltar:hover { color: var(--wm-red); }
 
-        .btn-voltar:hover {
-            color: var(--wm-red);
-        }
+        .detalhe-grid { display: grid; grid-template-columns: 2fr 1fr; gap: 25px; }
 
-        .detalhe-grid {
-            display: grid;
-            grid-template-columns: 2fr 1fr;
-            gap: 25px;
-        }
+        @media (max-width: 850px) { .detalhe-grid { grid-template-columns: 1fr; } }
 
-        @media (max-width: 850px) {
-            .detalhe-grid {
-                grid-template-columns: 1fr;
-            }
-        }
-
+        /* GALERIA DE FOTOS */
         .galeria-card {
-            background-color: var(--wm-card-bg);
-            border-radius: var(--border-radius);
-            overflow: hidden;
-            border: 1px solid var(--wm-border);
-            margin-bottom: 25px;
+            background-color: var(--wm-card-bg); border-radius: var(--border-radius);
+            overflow: hidden; border: 1px solid var(--wm-border); margin-bottom: 25px;
         }
 
-        .img-principal {
-            width: 100%;
-            max-height: 480px;
-            object-fit: cover;
-            background-color: #eee;
-            display: block;
+        .img-principal-wrapper { position: relative; width: 100%; height: 450px; background-color: #111; }
+
+        .img-principal { width: 100%; height: 100%; object-fit: contain; display: block; }
+
+        .thumbs-grid {
+            display: flex; gap: 10px; padding: 12px; overflow-x: auto;
+            background: #fafafa; border-top: 1px solid var(--wm-border);
         }
+
+        .thumb-item {
+            width: 80px; height: 60px; object-fit: cover; border-radius: 4px;
+            cursor: pointer; opacity: 0.6; border: 2px solid transparent; transition: all 0.2s;
+        }
+
+        .thumb-item:hover, .thumb-item.active { opacity: 1; border-color: var(--wm-red); }
 
         .box-descricao {
-            background-color: var(--wm-card-bg);
-            border-radius: var(--border-radius);
-            padding: 25px;
-            border: 1px solid var(--wm-border);
-            margin-bottom: 25px;
+            background-color: var(--wm-card-bg); border-radius: var(--border-radius);
+            padding: 25px; border: 1px solid var(--wm-border); margin-bottom: 25px;
         }
 
         .box-descricao h3 {
-            font-size: 1.2rem;
-            color: var(--wm-text-dark);
-            margin-bottom: 15px;
-            padding-bottom: 10px;
-            border-bottom: 2px solid var(--wm-red);
-            display: inline-block;
+            font-size: 1.2rem; color: var(--wm-text-dark); margin-bottom: 15px;
+            padding-bottom: 10px; border-bottom: 2px solid var(--wm-red); display: inline-block;
         }
 
-        .texto-descricao {
-            font-size: 0.95rem;
-            line-height: 1.6;
-            color: #4a4d5e;
-            white-space: pre-line;
-        }
+        .texto-descricao { font-size: 0.95rem; line-height: 1.6; color: #4a4d5e; white-space: pre-line; }
 
         .sidebar-compra {
-            background-color: var(--wm-card-bg);
-            border-radius: var(--border-radius);
-            padding: 25px;
-            border: 1px solid var(--wm-border);
-            height: fit-content;
-            position: sticky;
-            top: 20px;
+            background-color: var(--wm-card-bg); border-radius: var(--border-radius);
+            padding: 25px; border: 1px solid var(--wm-border); height: fit-content; position: sticky; top: 20px;
         }
 
-        .titulo-veiculo {
-            font-size: 1.6rem;
-            font-weight: 800;
-            color: var(--wm-text-dark);
-            margin-bottom: 5px;
-            text-transform: uppercase;
-        }
+        .titulo-veiculo { font-size: 1.6rem; font-weight: 800; color: var(--wm-text-dark); margin-bottom: 5px; text-transform: uppercase; }
+        .preco-destaque { font-size: 2rem; font-weight: 800; color: var(--wm-red); margin: 15px 0 20px; }
 
-        .preco-destaque {
-            font-size: 2rem;
-            font-weight: 800;
-            color: var(--wm-red);
-            margin: 15px 0 20px;
-        }
-
-        .ficha-tecnica {
-            margin-bottom: 25px;
-        }
-
-        .ficha-item {
-            display: flex;
-            justify-content: space-between;
-            padding: 10px 0;
-            border-bottom: 1px dashed var(--wm-border);
-            font-size: 0.9rem;
-        }
-
-        .ficha-item span {
-            color: var(--wm-text-muted);
-        }
-
-        .ficha-item strong {
-            color: var(--wm-text-dark);
-        }
+        .ficha-tecnica { margin-bottom: 25px; }
+        .ficha-item { display: flex; justify-content: space-between; padding: 10px 0; border-bottom: 1px dashed var(--wm-border); font-size: 0.9rem; }
+        .ficha-item span { color: var(--wm-text-muted); }
+        .ficha-item strong { color: var(--wm-text-dark); }
 
         .btn-whatsapp-wm {
-            display: block;
-            text-align: center;
-            background: #25D366;
-            color: white;
-            text-decoration: none;
-            padding: 15px;
-            border-radius: var(--border-radius);
-            font-weight: 700;
-            font-size: 1rem;
-            transition: background 0.2s ease;
+            display: block; text-align: center; background: #25D366; color: white;
+            text-decoration: none; padding: 15px; border-radius: var(--border-radius);
+            font-weight: 700; font-size: 1rem; transition: background 0.2s ease;
         }
+        .btn-whatsapp-wm:hover { background: #1faa55; }
 
-        .btn-whatsapp-wm:hover {
-            background: #1faa55;
-        }
+        .mensagem-alerta { text-align: center; color: var(--wm-text-muted); padding: 60px 0; font-size: 1.2rem; background: white; border-radius: var(--border-radius); }
 
-        .mensagem-alerta {
-            text-align: center;
-            color: var(--wm-text-muted);
-            padding: 60px 0;
-            font-size: 1.2rem;
-            background: white;
-            border-radius: var(--border-radius);
-        }
-
-        /* Rodapé */
-        .footer {
-            background-color: var(--wm-dark);
-            color: #a0a5b5;
-            padding: 40px 20px 20px;
-            border-top: 3px solid var(--wm-red);
-        }
-
-        .footer-content {
-            max-width: 1100px;
-            margin: 0 auto;
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-            gap: 30px;
-            padding-bottom: 30px;
-            border-bottom: 1px solid #2e3040;
-        }
-
-        .footer-col h3 {
-            color: white;
-            font-size: 1.1rem;
-            margin-bottom: 15px;
-            font-weight: 700;
-        }
-
-        .footer-col p {
-            font-size: 0.95rem;
-            line-height: 1.6;
-            margin-bottom: 8px;
-        }
-
-        .footer-bottom {
-            max-width: 1100px;
-            margin: 20px auto 0;
-            text-align: center;
-            font-size: 0.85rem;
-            color: #707585;
-        }
+        .footer { background-color: var(--wm-dark); color: #a0a5b5; padding: 40px 20px 20px; border-top: 3px solid var(--wm-red); }
+        .footer-content { max-width: 1100px; margin: 0 auto; display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 30px; padding-bottom: 30px; border-bottom: 1px solid #2e3040; }
+        .footer-col h3 { color: white; font-size: 1.1rem; margin-bottom: 15px; font-weight: 700; }
+        .footer-col p { font-size: 0.95rem; line-height: 1.6; margin-bottom: 8px; }
+        .footer-bottom { max-width: 1100px; margin: 20px auto 0; text-align: center; font-size: 0.85rem; color: #707585; }
     </style>
 </head>
 
@@ -254,10 +121,7 @@
     </nav>
 
     <div class="container">
-        <a href="index.html" class="btn-voltar">
-            ← Voltar para a pesquisa
-        </a>
-
+        <a href="index.html" class="btn-voltar">← Voltar para a pesquisa</a>
         <main id="conteudoVeiculo">
             <div class="mensagem-alerta">Carregando detalhes do veículo...</div>
         </main>
@@ -267,7 +131,7 @@
         <div class="footer-content">
             <div class="footer-col">
                 <h3>MAZO AUTOMÓVEIS</h3>
-                <p>Sua melhor opção em veículos seminovos com garantia e procedência.</p>
+                <p>Sua melhor opção em veículos seminovos com garantia e procedência.</p>
             </div>
             <div class="footer-col">
                 <h3>Localização</h3>
@@ -280,9 +144,7 @@
                 <p>💬 Atendimento via WhatsApp de Segunda a Sábado</p>
             </div>
         </div>
-        <div class="footer-bottom">
-            &copy; Mazo Automóveis - Todos os direitos reservados.
-        </div>
+        <div class="footer-bottom">&copy; Mazo Automóveis - Todos os direitos reservados.</div>
     </footer>
 
     <script>
@@ -302,18 +164,11 @@
             }
 
             try {
-                const resposta = await fetch(
-                    `${SUPABASE_URL}/rest/v1/veiculos?id=eq.${id}&select=*`,
-                    {
-                        headers: {
-                            apikey: SUPABASE_KEY,
-                            Authorization: `Bearer ${SUPABASE_KEY}`
-                        }
-                    }
-                );
+                const resposta = await fetch(`${SUPABASE_URL}/rest/v1/veiculos?id=eq.${id}&select=*`, {
+                    headers: { apikey: SUPABASE_KEY, Authorization: `Bearer ${SUPABASE_KEY}` }
+                });
 
                 if (!resposta.ok) throw new Error("Erro na consulta");
-
                 const dados = await resposta.json();
 
                 if (!dados || dados.length === 0) {
@@ -323,71 +178,53 @@
 
                 const v = dados[0];
 
-                const precoFormatado = v.preco 
-                    ? `R$ ${Number(v.preco).toLocaleString('pt-BR')}` 
-                    : 'Sob Consulta';
+                const precoFormatado = v.preco ? `R$ ${Number(v.preco).toLocaleString('pt-BR')}` : 'Sob Consulta';
+                const kmFormatado = v.km ? `${Number(v.km).toLocaleString('pt-BR')} km` : 'Não informado';
 
-                const kmFormatado = v.km 
-                    ? `${Number(v.km).toLocaleString('pt-BR')} km` 
-                    : 'Não informado';
+                // Consolida fotos (capa + galeria)
+                const fotoCapa = v.foto_url || 'https://via.placeholder.com/800x500?text=Sem+Foto';
+                const galeria = v.fotos_galeria && Array.isArray(v.fotos_galeria) ? v.fotos_galeria : [];
+                const todasFotos = [fotoCapa, ...galeria];
 
-                const fotoUrl = v.foto_url || 'https://via.placeholder.com/800x500?text=Sem+Foto';
-                
                 const anoTexto = v.ano ? `Ano ${v.ano}` : 'Ano não informado';
                 const corTexto = v.cor ? `Cor ${v.cor}` : 'Cor não informada';
                 const mensagemWhatsApp = encodeURIComponent(`Olá! Tenho interesse no veículo ${v.marca} ${v.modelo} (${anoTexto}, ${corTexto} - Ref. ID: ${v.id}).`);
 
-                const descricaoTexto = v.descricao && v.descricao.trim() !== '' 
-                    ? v.descricao 
-                    : 'Nenhuma descrição detalhada informada para este veículo.';
+                let htmlThumbs = '';
+                todasFotos.forEach((img, idx) => {
+                    htmlThumbs += `<img class="thumb-item ${idx === 0 ? 'active' : ''}" src="${img}" onclick="trocarFoto('${img}', this)">`;
+                });
 
                 container.innerHTML = `
                     <div class="detalhe-grid">
                         <div>
                             <div class="galeria-card">
-                                <img class="img-principal" src="${fotoUrl}" alt="${v.marca} ${v.modelo}">
+                                <div class="img-principal-wrapper">
+                                    <img id="imgDestaque" class="img-principal" src="${fotoCapa}" alt="${v.marca} ${v.modelo}">
+                                </div>
+                                ${todasFotos.length > 1 ? `<div class="thumbs-grid">${htmlThumbs}</div>` : ''}
                             </div>
 
                             <div class="box-descricao">
                                 <h3>Descrição do Veículo</h3>
-                                <div class="texto-descricao">${descricaoTexto}</div>
+                                <div class="texto-descricao">${v.descricao || 'Nenhuma descrição detalhada informada.'}</div>
                             </div>
                         </div>
 
                         <div>
                             <div class="sidebar-compra">
                                 <h1 class="titulo-veiculo">${v.marca || ''} ${v.modelo || ''}</h1>
-                                
                                 <div class="preco-destaque">${precoFormatado}</div>
 
                                 <div class="ficha-tecnica">
-                                    <div class="ficha-item">
-                                        <span>Ano</span>
-                                        <strong>${v.ano || 'Não informado'}</strong>
-                                    </div>
-                                    <div class="ficha-item">
-                                        <span>Cor</span>
-                                        <strong>${v.cor || 'Não informada'}</strong>
-                                    </div>
-                                    <div class="ficha-item">
-                                        <span>KM</span>
-                                        <strong>${kmFormatado}</strong>
-                                    </div>
-                                    <div class="ficha-item">
-                                        <span>Câmbio</span>
-                                        <strong>${v.cambio || 'Não informado'}</strong>
-                                    </div>
-                                    <div class="ficha-item">
-                                        <span>Combustível</span>
-                                        <strong>${v.combustivel || 'Não informado'}</strong>
-                                    </div>
+                                    <div class="ficha-item"><span>Ano</span><strong>${v.ano || 'Não informado'}</strong></div>
+                                    <div class="ficha-item"><span>Cor</span><strong>${v.cor || 'Não informada'}</strong></div>
+                                    <div class="ficha-item"><span>KM</span><strong>${kmFormatado}</strong></div>
+                                    <div class="ficha-item"><span>Câmbio</span><strong>${v.cambio || 'Não informado'}</strong></div>
+                                    <div class="ficha-item"><span>Combustível</span><strong>${v.combustivel || 'Não informado'}</strong></div>
                                 </div>
 
-                                <a 
-                                    class="btn-whatsapp-wm" 
-                                    target="_blank" 
-                                    rel="noopener noreferrer"
-                                    href="https://wa.me/${TELEFONE_WHATSAPP}?text=${mensagemWhatsApp}">
+                                <a class="btn-whatsapp-wm" target="_blank" rel="noopener noreferrer" href="https://wa.me/${TELEFONE_WHATSAPP}?text=${mensagemWhatsApp}">
                                     Enviar Mensagem via WhatsApp
                                 </a>
                             </div>
@@ -401,8 +238,13 @@
             }
         }
 
+        window.trocarFoto = function(src, elemento) {
+            document.getElementById('imgDestaque').src = src;
+            document.querySelectorAll('.thumb-item').forEach(el => el.classList.remove('active'));
+            elemento.classList.add('active');
+        }
+
         carregarVeiculo();
     </script>
-
 </body>
 </html>

@@ -45,16 +45,13 @@
 
         .container { max-width: 1000px; margin: 30px auto; padding: 0 20px; }
 
-        /* Login Box */
         .login-box {
             max-width: 400px; margin: 80px auto; background: white; padding: 30px;
             border-radius: var(--border-radius); box-shadow: 0 4px 12px rgba(0,0,0,0.1);
         }
 
         .login-box h2 { margin-bottom: 20px; text-align: center; }
-
         .form-group { margin-bottom: 15px; }
-
         .form-group label { display: block; margin-bottom: 5px; font-weight: 600; font-size: 0.9rem; }
 
         .form-control {
@@ -71,7 +68,6 @@
 
         .btn-primary:hover { background: var(--wm-red-hover); }
 
-        /* Dashboard Admin */
         #painelAdmin { display: none; }
 
         .admin-card {
@@ -80,34 +76,21 @@
         }
 
         .admin-card h2 { margin-bottom: 20px; font-size: 1.2rem; border-bottom: 2px solid var(--wm-red); padding-bottom: 8px; display: inline-block; }
-
         .form-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 15px; }
-
         .col-span-2 { grid-column: span 2; }
 
         @media (max-width: 600px) { .col-span-2 { grid-column: span 1; } }
 
-        /* Tabela */
         .table-responsive { overflow-x: auto; }
-
         table { width: 100%; border-collapse: collapse; margin-top: 10px; }
-
         th, td { padding: 12px 15px; text-align: left; border-bottom: 1px solid var(--wm-border); font-size: 0.9rem; }
-
         th { background-color: #fafafa; color: var(--wm-text-muted); font-weight: 700; }
 
-        .badge-status {
-            padding: 4px 8px; border-radius: 4px; font-size: 0.75rem; font-weight: 700; text-transform: uppercase;
-        }
-
+        .badge-status { padding: 4px 8px; border-radius: 4px; font-size: 0.75rem; font-weight: 700; text-transform: uppercase; }
         .badge-disponivel { background: #e6f4ea; color: #137333; }
         .badge-vendido { background: #feefe3; color: #b06000; }
 
-        .btn-action {
-            padding: 6px 10px; border: none; border-radius: 4px; font-size: 0.8rem;
-            cursor: pointer; font-weight: 600; margin-right: 5px;
-        }
-
+        .btn-action { padding: 6px 10px; border: none; border-radius: 4px; font-size: 0.8rem; cursor: pointer; font-weight: 600; margin-right: 5px; }
         .btn-vendido { background: #fbbc04; color: #202124; }
         .btn-excluir { background: #d93025; color: white; }
     </style>
@@ -122,7 +105,6 @@
 
     <div class="container">
         
-        <!-- TELA DE LOGIN -->
         <div id="boxLogin" class="login-box">
             <h2>Acesso Restrito</h2>
             <form id="formLogin">
@@ -138,10 +120,8 @@
             </form>
         </div>
 
-        <!-- PAINEL ADMINISTRATIVO -->
         <div id="painelAdmin">
             
-            <!-- FORMULÁRIO DE CADASTRO -->
             <div class="admin-card">
                 <h2>Cadastrar Novo Veículo</h2>
                 <form id="formCadastrar">
@@ -186,20 +166,27 @@
                                 <option value="Elétrico">Elétrico</option>
                             </select>
                         </div>
+
+                        <!-- UPLOAD DE IMAGENS -->
                         <div class="form-group col-span-2">
-                            <label>URL da Foto Principal</label>
-                            <input type="url" id="foto_url" class="form-control" placeholder="https://link-da-imagem.com/foto.jpg">
+                            <label>Foto de Capa (Principal)</label>
+                            <input type="file" id="fotoCapaInput" class="form-control" accept="image/*" required>
                         </div>
+
+                        <div class="form-group col-span-2">
+                            <label>Outras Fotos (Galeria - Selecione várias)</label>
+                            <input type="file" id="fotosGaleriaInput" class="form-control" accept="image/*" multiple>
+                        </div>
+
                         <div class="form-group col-span-2">
                             <label>Descrição Detalhada</label>
                             <textarea id="descricao" class="form-control" rows="3" placeholder="Informações adicionais do carro..."></textarea>
                         </div>
                     </div>
-                    <button type="submit" class="btn-primary" style="margin-top: 15px;">Salvar Veículo</button>
+                    <button type="submit" id="btnSalvar" class="btn-primary" style="margin-top: 15px;">Salvar Veículo</button>
                 </form>
             </div>
 
-            <!-- TABELA DE GESTÃO -->
             <div class="admin-card">
                 <h2>Estoque Cadastrado</h2>
                 <div class="table-responsive">
@@ -213,9 +200,7 @@
                                 <th>Ações</th>
                             </tr>
                         </thead>
-                        <tbody id="listaEstoque">
-                            <!-- Preenchido via JS -->
-                        </tbody>
+                        <tbody id="listaEstoque"></tbody>
                     </table>
                 </div>
             </div>
@@ -224,7 +209,6 @@
 
     </div>
 
-    <!-- MÓDULO JS SUPABASE -->
     <script type="module">
         import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js/+esm';
 
@@ -233,7 +217,6 @@
 
         const supabase = createClient(SUPABASE_URL, SUPABASE_KEY);
 
-        // Verificar sessão ao carregar
         document.addEventListener('DOMContentLoaded', async () => {
             const { data: { session } } = await supabase.auth.getSession();
             if (session) {
@@ -241,22 +224,16 @@
             }
         });
 
-        // Login
         document.getElementById('formLogin').addEventListener('submit', async (e) => {
             e.preventDefault();
             const email = document.getElementById('loginEmail').value;
             const password = document.getElementById('loginSenha').value;
 
-            const { data, error } = await supabase.auth.signInWithPassword({ email, password });
-
-            if (error) {
-                alert("Erro ao acessar: " + error.message);
-            } else {
-                exibirPainel();
-            }
+            const { error } = await supabase.auth.signInWithPassword({ email, password });
+            if (error) alert("Erro ao acessar: " + error.message);
+            else exibirPainel();
         });
 
-        // Logout
         window.fazerLogout = async function() {
             await supabase.auth.signOut();
             document.getElementById('painelAdmin').style.display = 'none';
@@ -271,36 +248,76 @@
             carregarTabelaEstoque();
         }
 
-        // Cadastrar Veículo
+        async function uploadArquivo(file) {
+            const fileExt = file.name.split('.').pop();
+            const fileName = `${Date.now()}_${Math.random().toString(36).substring(2)}.${fileExt}`;
+            const filePath = `carros/${fileName}`;
+
+            const { error } = await supabase.storage
+                .from('fotos-veiculos')
+                .upload(filePath, file);
+
+            if (error) throw error;
+
+            const { data } = supabase.storage
+                .from('fotos-veiculos')
+                .getPublicUrl(filePath);
+
+            return data.publicUrl;
+        }
+
         document.getElementById('formCadastrar').addEventListener('submit', async (e) => {
             e.preventDefault();
+            const btn = document.getElementById('btnSalvar');
+            btn.disabled = true;
+            btn.innerText = "Enviando imagens e salvando...";
 
-            const novoCarro = {
-                marca: document.getElementById('marca').value,
-                modelo: document.getElementById('modelo').value,
-                ano: document.getElementById('ano').value ? Number(document.getElementById('ano').value) : null,
-                preco: document.getElementById('preco').value ? Number(document.getElementById('preco').value) : null,
-                cor: document.getElementById('cor').value,
-                km: document.getElementById('km').value ? Number(document.getElementById('km').value) : null,
-                cambio: document.getElementById('cambio').value,
-                combustivel: document.getElementById('combustivel').value,
-                foto_url: document.getElementById('foto_url').value,
-                descricao: document.getElementById('descricao').value,
-                status: 'disponivel'
-            };
+            try {
+                // 1. Upload da Capa
+                const fileCapa = document.getElementById('fotoCapaInput').files[0];
+                let fotoCapaUrl = await uploadArquivo(fileCapa);
 
-            const { error } = await supabase.from('veiculos').insert([novoCarro]);
+                // 2. Upload da Galeria
+                const filesGaleria = document.getElementById('fotosGaleriaInput').files;
+                let galeriaUrls = [];
 
-            if (error) {
-                alert("Erro ao cadastrar: " + error.message);
-            } else {
+                for (let i = 0; i < filesGaleria.length; i++) {
+                    const url = await uploadArquivo(filesGaleria[i]);
+                    galeriaUrls.push(url);
+                }
+
+                // 3. Cadastrar no Banco
+                const novoCarro = {
+                    marca: document.getElementById('marca').value,
+                    modelo: document.getElementById('modelo').value,
+                    ano: document.getElementById('ano').value ? Number(document.getElementById('ano').value) : null,
+                    preco: document.getElementById('preco').value ? Number(document.getElementById('preco').value) : null,
+                    cor: document.getElementById('cor').value,
+                    km: document.getElementById('km').value ? Number(document.getElementById('km').value) : null,
+                    cambio: document.getElementById('cambio').value,
+                    combustivel: document.getElementById('combustivel').value,
+                    foto_url: fotoCapaUrl,
+                    fotos_galeria: galeriaUrls,
+                    descricao: document.getElementById('descricao').value,
+                    status: 'disponivel'
+                };
+
+                const { error } = await supabase.from('veiculos').insert([novoCarro]);
+
+                if (error) throw error;
+
                 alert("Veículo cadastrado com sucesso!");
                 document.getElementById('formCadastrar').reset();
                 carregarTabelaEstoque();
+
+            } catch (err) {
+                alert("Erro ao cadastrar: " + err.message);
+            } finally {
+                btn.disabled = false;
+                btn.innerText = "Salvar Veículo";
             }
         });
 
-        // Listar Estoque na Tabela
         async function carregarTabelaEstoque() {
             const tbody = document.getElementById('listaEstoque');
             tbody.innerHTML = '<tr><td colspan="5">Carregando...</td></tr>';
@@ -342,27 +359,17 @@
             });
         }
 
-        // Alterar Status para Vendido
         window.marcarVendido = async function(id) {
             if (confirm("Deseja marcar este veículo como VENDIDO?")) {
-                const { error } = await supabase
-                    .from('veiculos')
-                    .update({ status: 'vendido' })
-                    .eq('id', id);
-
+                const { error } = await supabase.from('veiculos').update({ status: 'vendido' }).eq('id', id);
                 if (error) alert("Erro: " + error.message);
                 else carregarTabelaEstoque();
             }
         }
 
-        // Excluir Veículo
         window.excluirVeiculo = async function(id) {
             if (confirm("Tem certeza que deseja EXCLUIR permanentemente este veículo?")) {
-                const { error } = await supabase
-                    .from('veiculos')
-                    .delete()
-                    .eq('id', id);
-
+                const { error } = await supabase.from('veiculos').delete().eq('id', id);
                 if (error) alert("Erro: " + error.message);
                 else carregarTabelaEstoque();
             }
