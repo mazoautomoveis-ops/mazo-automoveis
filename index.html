@@ -29,14 +29,15 @@
             font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
             background-color: var(--wm-gray-bg);
             color: var(--wm-text-dark);
-            padding-bottom: 40px;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
         }
 
-        /* Navbar estilo Webmotors */
         .navbar {
             background-color: var(--wm-dark);
             color: white;
-            padding: 15px 20px;
+            padding: 18px 20px;
             box-shadow: 0 2px 10px rgba(0,0,0,0.1);
         }
 
@@ -53,16 +54,9 @@
             font-weight: 800;
             color: white;
             text-decoration: none;
-            display: flex;
-            align-items: center;
-            gap: 8px;
+            letter-spacing: 0.5px;
         }
 
-        .logo span {
-            color: var(--wm-red);
-        }
-
-        /* Hero / Caixa de Busca Principal */
         .hero-search-section {
             background: linear-gradient(180deg, var(--wm-dark) 0%, #2b2c3a 100%);
             padding: 40px 20px 60px;
@@ -124,35 +118,19 @@
             border-color: var(--wm-red);
         }
 
-        /* Container do Conteúdo */
         .main-container {
             max-width: 1200px;
-            margin: -20px auto 0;
+            margin: 30px auto 50px;
             padding: 0 20px;
+            flex: 1;
         }
 
-        .results-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 20px;
-            padding: 10px 0;
-        }
-
-        .results-count {
-            font-size: 1.1rem;
-            font-weight: 600;
-            color: var(--wm-text-dark);
-        }
-
-        /* Grid de Veículos */
         .carros-grid {
             display: grid;
             grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
             gap: 20px;
         }
 
-        /* Card estilo Webmotors */
         .carro-card {
             background: var(--wm-card-bg);
             border-radius: var(--border-radius);
@@ -238,7 +216,7 @@
             margin-bottom: 15px;
         }
 
-        .btn-proposta {
+        .btn-detalhes {
             display: block;
             text-align: center;
             background: var(--wm-red);
@@ -252,7 +230,7 @@
             margin-top: auto;
         }
 
-        .btn-proposta:hover {
+        .btn-detalhes:hover {
             background: var(--wm-red-hover);
         }
 
@@ -265,21 +243,56 @@
             background: white;
             border-radius: var(--border-radius);
         }
+
+        /* Rodapé */
+        .footer {
+            background-color: var(--wm-dark);
+            color: #a0a5b5;
+            padding: 40px 20px 20px;
+            border-top: 3px solid var(--wm-red);
+        }
+
+        .footer-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 30px;
+            padding-bottom: 30px;
+            border-bottom: 1px solid #2e3040;
+        }
+
+        .footer-col h3 {
+            color: white;
+            font-size: 1.1rem;
+            margin-bottom: 15px;
+            font-weight: 700;
+        }
+
+        .footer-col p {
+            font-size: 0.95rem;
+            line-height: 1.6;
+            margin-bottom: 8px;
+        }
+
+        .footer-bottom {
+            max-width: 1200px;
+            margin: 20px auto 0;
+            text-align: center;
+            font-size: 0.85rem;
+            color: #707585;
+        }
     </style>
 </head>
 
 <body>
 
-    <!-- Header / Navbar -->
     <nav class="navbar">
         <div class="navbar-content">
-            <a href="index.html" class="logo">
-                🚗 MAZO<span>MOTORS</span>
-            </a>
+            <a href="index.html" class="logo">MAZO AUTOMÓVEIS</a>
         </div>
     </nav>
 
-    <!-- Hero com Campo de Busca estilo Webmotors -->
     <section class="hero-search-section">
         <div class="search-box-container">
             <h1 class="search-title">Compre o seu próximo carro online</h1>
@@ -289,13 +302,11 @@
                     type="text" 
                     id="busca" 
                     class="input-busca-wm" 
-                    placeholder="Digite a marca ou modelo (ex: Gol, Corolla)..." 
+                    placeholder="Digite o modelo..." 
                 />
                 
-                <select id="filtroCambio" class="select-wm">
-                    <option value="">Todas os Câmbios</option>
-                    <option value="Manual">Manual</option>
-                    <option value="Automático">Automático</option>
+                <select id="filtroMarca" class="select-wm">
+                    <option value="">Todas as Marcas</option>
                 </select>
 
                 <select id="ordenacao" class="select-wm">
@@ -308,19 +319,35 @@
         </div>
     </section>
 
-    <!-- Listagem Principal -->
     <main class="main-container">
-        <div class="results-header">
-            <div class="results-count" id="contadorResultados">Carregando estoque...</div>
-        </div>
-
         <div class="carros-grid" id="carros"></div>
     </main>
+
+    <footer class="footer">
+        <div class="footer-content">
+            <div class="footer-col">
+                <h3>MAZO AUTOMÓVEIS</h3>
+                <p>Sua melhor opção em veículos seminovos com garantia e procedência.</p>
+            </div>
+            <div class="footer-col">
+                <h3>Localização</h3>
+                <p>📍 SC-370, 2470 - Rio Bonito</p>
+                <p>Braço do Norte - SC</p>
+            </div>
+            <div class="footer-col">
+                <h3>Atendimento</h3>
+                <p>📞 (48) 99987-2525</p>
+                <p>💬 Atendimento via WhatsApp de Segunda a Sábado</p>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            &copy; Mazo Automóveis - Todos os direitos reservados.
+        </div>
+    </footer>
 
     <script>
         const SUPABASE_URL = "https://jzpshjdwspuslzkhljuz.supabase.co";
         const SUPABASE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imp6cHNoamR3c3B1c2x6a2hsanV6Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODkwMjAzNDcsImV4cCI6MjEwNDU5NjM0N30.WCR4PkCwJpVMijtRboBtIL1QD90c5gVWcY47qer9OUA";
-        const TELEFONE_WHATSAPP = "5527999999999";
 
         let veiculosCache = [];
 
@@ -331,7 +358,7 @@
 
         function configurarEventos() {
             document.getElementById('busca').addEventListener('input', aplicarFiltrosERenderizar);
-            document.getElementById('filtroCambio').addEventListener('change', aplicarFiltrosERenderizar);
+            document.getElementById('filtroMarca').addEventListener('change', aplicarFiltrosERenderizar);
             document.getElementById('ordenacao').addEventListener('change', aplicarFiltrosERenderizar);
         }
 
@@ -350,6 +377,7 @@
                 if (!resposta.ok) throw new Error('Falha ao obter dados');
 
                 veiculosCache = await resposta.json();
+                preencherFiltroMarcas(veiculosCache);
                 aplicarFiltrosERenderizar();
 
             } catch (erro) {
@@ -358,17 +386,31 @@
             }
         }
 
+        function preencherFiltroMarcas(veiculos) {
+            const selectMarca = document.getElementById('filtroMarca');
+            const marcasUnicas = [...new Set(veiculos.map(v => v.marca).filter(Boolean))].sort();
+
+            selectMarca.innerHTML = '<option value="">Todas as Marcas</option>';
+            marcasUnicas.forEach(marca => {
+                const option = document.createElement('option');
+                option.value = marca;
+                option.textContent = marca;
+                selectMarca.appendChild(option);
+            });
+        }
+
         function aplicarFiltrosERenderizar() {
             const textoBusca = document.getElementById('busca').value.trim().toLowerCase();
-            const cambioSelecionado = document.getElementById('filtroCambio').value;
+            const marcaSelecionada = document.getElementById('filtroMarca').value;
             const ordenacaoSelecionada = document.getElementById('ordenacao').value;
 
             let resultado = veiculosCache.filter(v => {
-                const nomeCompleto = `${v.marca || ''} ${v.modelo || ''}`.toLowerCase();
-                const atendeBusca = nomeCompleto.includes(textoBusca);
-                const atendeCambio = cambioSelecionado === '' || (v.cambio && v.cambio.toLowerCase() === cambioSelecionado.toLowerCase());
+                const modelo = (v.modelo || '').toLowerCase();
+                const marca = (v.marca || '').toLowerCase();
+                const atendeBusca = modelo.includes(textoBusca) || marca.includes(textoBusca);
+                const atendeMarca = marcaSelecionada === '' || (v.marca && v.marca.toLowerCase() === marcaSelecionada.toLowerCase());
 
-                return atendeBusca && atendeCambio;
+                return atendeBusca && atendeMarca;
             });
 
             if (ordenacaoSelecionada === 'preco-asc') {
@@ -384,9 +426,6 @@
 
         function renderizarCards(veiculos) {
             const carrosContainer = document.getElementById('carros');
-            const contador = document.getElementById('contadorResultados');
-            
-            contador.innerText = `${veiculos.length} ${veiculos.length === 1 ? 'veículo encontrado' : 'veículos encontrados'}`;
             carrosContainer.innerHTML = '';
 
             if (veiculos.length === 0) {
@@ -404,7 +443,6 @@
                     : '0 km';
 
                 const fotoUrl = v.foto_url || 'https://via.placeholder.com/600x400?text=Sem+Foto';
-                const mensagemWhatsApp = encodeURIComponent(`Olá! Gostaria de mais informações sobre o ${v.marca} ${v.modelo}`);
 
                 const cardHtml = `
                     <article class="carro-card" onclick="irParaDetalhes('${v.id}')">
@@ -423,13 +461,8 @@
                                 <span>${kmFormatado}</span>
                             </div>
 
-                            <a 
-                                class="btn-proposta" 
-                                target="_blank" 
-                                rel="noopener noreferrer"
-                                href="https://wa.me/${TELEFONE_WHATSAPP}?text=${mensagemWhatsApp}"
-                                onclick="event.stopPropagation();">
-                                Ver Proposta
+                            <a class="btn-detalhes" href="detalhes.html?id=${v.id}">
+                                Ver Detalhes
                             </a>
                         </div>
                     </article>

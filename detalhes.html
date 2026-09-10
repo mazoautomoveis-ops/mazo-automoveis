@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Detalhes do Veículo - Mazo Motors</title>
+    <title>Detalhes do Veículo - Mazo Automóveis</title>
 
     <style>
         :root {
@@ -29,14 +29,15 @@
             font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
             background-color: var(--wm-gray-bg);
             color: var(--wm-text-dark);
-            padding-bottom: 50px;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
         }
 
-        /* Navbar estilo Webmotors */
         .navbar {
             background-color: var(--wm-dark);
             color: white;
-            padding: 15px 20px;
+            padding: 18px 20px;
             box-shadow: 0 2px 10px rgba(0,0,0,0.1);
             margin-bottom: 30px;
         }
@@ -54,16 +55,14 @@
             font-weight: 800;
             color: white;
             text-decoration: none;
-        }
-
-        .logo span {
-            color: var(--wm-red);
+            letter-spacing: 0.5px;
         }
 
         .container {
             max-width: 1100px;
-            margin: 0 auto;
+            margin: 0 auto 50px;
             padding: 0 20px;
+            flex: 1;
         }
 
         .btn-voltar {
@@ -82,7 +81,6 @@
             color: var(--wm-red);
         }
 
-        /* Layout em Colunas (Estilo Webmotors Ficha Técnica + Contato) */
         .detalhe-grid {
             display: grid;
             grid-template-columns: 2fr 1fr;
@@ -111,7 +109,6 @@
             display: block;
         }
 
-        /* Seção da Descrição */
         .box-descricao {
             background-color: var(--wm-card-bg);
             border-radius: var(--border-radius);
@@ -133,10 +130,9 @@
             font-size: 0.95rem;
             line-height: 1.6;
             color: #4a4d5e;
-            white-space: pre-line; /* Mantém as quebras de linha enviadas no cadastro */
+            white-space: pre-line;
         }
 
-        /* Sidebar de Preço e Contato */
         .sidebar-compra {
             background-color: var(--wm-card-bg);
             border-radius: var(--border-radius);
@@ -162,7 +158,6 @@
             margin: 15px 0 20px;
         }
 
-        /* Tabela Ficha Técnica */
         .ficha-tecnica {
             margin-bottom: 25px;
         }
@@ -208,6 +203,45 @@
             background: white;
             border-radius: var(--border-radius);
         }
+
+        /* Rodapé */
+        .footer {
+            background-color: var(--wm-dark);
+            color: #a0a5b5;
+            padding: 40px 20px 20px;
+            border-top: 3px solid var(--wm-red);
+        }
+
+        .footer-content {
+            max-width: 1100px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 30px;
+            padding-bottom: 30px;
+            border-bottom: 1px solid #2e3040;
+        }
+
+        .footer-col h3 {
+            color: white;
+            font-size: 1.1rem;
+            margin-bottom: 15px;
+            font-weight: 700;
+        }
+
+        .footer-col p {
+            font-size: 0.95rem;
+            line-height: 1.6;
+            margin-bottom: 8px;
+        }
+
+        .footer-bottom {
+            max-width: 1100px;
+            margin: 20px auto 0;
+            text-align: center;
+            font-size: 0.85rem;
+            color: #707585;
+        }
     </style>
 </head>
 
@@ -215,9 +249,7 @@
 
     <nav class="navbar">
         <div class="navbar-content">
-            <a href="index.html" class="logo">
-                🚗 MAZO<span>MOTORS</span>
-            </a>
+            <a href="index.html" class="logo">MAZO AUTOMÓVEIS</a>
         </div>
     </nav>
 
@@ -231,10 +263,32 @@
         </main>
     </div>
 
+    <footer class="footer">
+        <div class="footer-content">
+            <div class="footer-col">
+                <h3>MAZO AUTOMÓVEIS</h3>
+                <p>Sua melhor opção em veículos seminovos com garantia e procedência.</p>
+            </div>
+            <div class="footer-col">
+                <h3>Localização</h3>
+                <p>📍 SC-370, 2470 - Rio Bonito</p>
+                <p>Braço do Norte - SC</p>
+            </div>
+            <div class="footer-col">
+                <h3>Atendimento</h3>
+                <p>📞 (48) 99987-2525</p>
+                <p>💬 Atendimento via WhatsApp de Segunda a Sábado</p>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            &copy; Mazo Automóveis - Todos os direitos reservados.
+        </div>
+    </footer>
+
     <script>
         const SUPABASE_URL = "https://jzpshjdwspuslzkhljuz.supabase.co";
         const SUPABASE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imp6cHNoamR3c3B1c2x6a2hsanV6Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODkwMjAzNDcsImV4cCI6MjEwNDU5NjM0N30.WCR4PkCwJpVMijtRboBtIL1QD90c5gVWcY47qer9OUA";
-        const TELEFONE_WHATSAPP = "5527999999999";
+        const TELEFONE_WHATSAPP = "5548999872525";
 
         const parametros = new URLSearchParams(window.location.search);
         const id = parametros.get("id");
@@ -278,16 +332,17 @@
                     : 'Não informado';
 
                 const fotoUrl = v.foto_url || 'https://via.placeholder.com/800x500?text=Sem+Foto';
-                const mensagemWhatsApp = encodeURIComponent(`Olá! Tenho interesse no veículo ${v.marca} ${v.modelo} (Anúncio ID: ${v.id}).`);
+                
+                const anoTexto = v.ano ? `Ano ${v.ano}` : 'Ano não informado';
+                const corTexto = v.cor ? `Cor ${v.cor}` : 'Cor não informada';
+                const mensagemWhatsApp = encodeURIComponent(`Olá! Tenho interesse no veículo ${v.marca} ${v.modelo} (${anoTexto}, ${corTexto} - Ref. ID: ${v.id}).`);
 
-                // Trata a coluna "descricao" do Supabase
                 const descricaoTexto = v.descricao && v.descricao.trim() !== '' 
                     ? v.descricao 
                     : 'Nenhuma descrição detalhada informada para este veículo.';
 
                 container.innerHTML = `
                     <div class="detalhe-grid">
-                        <!-- Coluna Esquerda: Imagem e Descrição -->
                         <div>
                             <div class="galeria-card">
                                 <img class="img-principal" src="${fotoUrl}" alt="${v.marca} ${v.modelo}">
@@ -299,7 +354,6 @@
                             </div>
                         </div>
 
-                        <!-- Coluna Direita: Informações e Contato -->
                         <div>
                             <div class="sidebar-compra">
                                 <h1 class="titulo-veiculo">${v.marca || ''} ${v.modelo || ''}</h1>
@@ -310,6 +364,10 @@
                                     <div class="ficha-item">
                                         <span>Ano</span>
                                         <strong>${v.ano || 'Não informado'}</strong>
+                                    </div>
+                                    <div class="ficha-item">
+                                        <span>Cor</span>
+                                        <strong>${v.cor || 'Não informada'}</strong>
                                     </div>
                                     <div class="ficha-item">
                                         <span>KM</span>
