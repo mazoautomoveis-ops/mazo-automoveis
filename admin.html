@@ -1,145 +1,565 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
+
 <head>
     <meta charset="UTF-8">
-    <title>Painel Admin - Excluir Veículo com Fotos</title>
-    <!-- Inclua o SDK do Supabase aqui se ainda não tiver -->
-    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Painel Admin - Mazo Automóveis</title>
+    <style>
+        :root {
+            --wm-red: #d30000;
+            --wm-red-hover: #b00000;
+            --wm-dark: #0d0d0d;
+            --wm-gray-bg: #f4f6f9;
+            --wm-card-bg: #ffffff;
+            --wm-text-dark: #1a1a1a;
+            --wm-text-muted: #666666;
+            --wm-border: #e0e0e0;
+            --border-radius: 8px;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+            background-color: var(--wm-gray-bg);
+            color: var(--wm-text-dark);
+            min-height: 100vh;
+        }
+
+        .navbar {
+            background-color: var(--wm-dark);
+            color: white;
+            padding: 12px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 3px solid var(--wm-red);
+        }
+
+        .logo-img { height: 45px; width: auto; object-fit: contain; }
+
+        .btn-logout {
+            background: #333; color: white; border: none; padding: 8px 16px;
+            border-radius: 6px; cursor: pointer; font-weight: 600; display: none;
+        }
+
+        .container { max-width: 1000px; margin: 30px auto; padding: 0 20px; }
+
+        .login-box {
+            max-width: 400px; margin: 80px auto; background: white; padding: 30px;
+            border-radius: var(--border-radius); box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+        }
+
+        .login-box h2 { margin-bottom: 20px; text-align: center; }
+        .form-group { margin-bottom: 15px; }
+        .form-group label { display: block; margin-bottom: 5px; font-weight: 600; font-size: 0.9rem; }
+
+        .form-control {
+            width: 100%; padding: 10px 12px; border: 1px solid var(--wm-border);
+            border-radius: 6px; font-size: 14px; outline: none;
+        }
+
+        .form-control:focus { border-color: var(--wm-red); }
+
+        .btn-primary {
+            background: var(--wm-red); color: white; border: none;
+            padding: 12px 20px; border-radius: 6px; font-weight: 700; cursor: pointer;
+            display: inline-block;
+        }
+
+        .btn-primary:hover { background: var(--wm-red-hover); }
+
+        #painelAdmin { display: none; }
+
+        .admin-header-actions {
+            display: flex; justify-content: space-between; align-items: center;
+            margin-bottom: 20px; background: white; padding: 20px; border-radius: var(--border-radius);
+            border: 1px solid var(--wm-border);
+        }
+
+        .admin-card {
+            background: white; padding: 25px; border-radius: var(--border-radius);
+            border: 1px solid var(--wm-border); margin-bottom: 30px;
+        }
+
+        .form-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 15px; }
+        .col-span-2 { grid-column: span 2; }
+
+        @media (max-width: 600px) { .col-span-2 { grid-column: span 1; } }
+
+        .table-responsive { overflow-x: auto; }
+        table { width: 100%; border-collapse: collapse; margin-top: 10px; }
+        th, td { padding: 12px 15px; text-align: left; border-bottom: 1px solid var(--wm-border); font-size: 0.9rem; }
+        th { background-color: #fafafa; color: var(--wm-text-muted); font-weight: 700; }
+
+        .badge-status { padding: 4px 8px; border-radius: 4px; font-size: 0.75rem; font-weight: 700; text-transform: uppercase; }
+        .badge-disponivel { background: #e6f4ea; color: #137333; }
+        .badge-vendido { background: #feefe3; color: #b06000; }
+
+        .btn-action { padding: 6px 10px; border: none; border-radius: 4px; font-size: 0.8rem; cursor: pointer; font-weight: 600; margin-right: 5px; }
+        .btn-vendido { background: #fbbc04; color: #202124; }
+        .btn-disponivel { background: #137333; color: white; }
+        .btn-editar { background: #1a73e8; color: white; }
+        .btn-excluir { background: #d93025; color: white; }
+
+        /* MODAIS */
+        .modal-overlay {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.6); display: none; justify-content: center;
+            align-items: center; z-index: 1000; padding: 20px;
+        }
+
+        .modal-content {
+            background: white; padding: 25px; border-radius: var(--border-radius);
+            max-width: 800px; width: 100%; max-height: 90vh; overflow-y: auto;
+            position: relative;
+        }
+
+        .modal-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; border-bottom: 1px solid var(--wm-border); padding-bottom: 10px; }
+        .btn-close-modal { background: none; border: none; font-size: 1.5rem; cursor: pointer; color: var(--wm-text-muted); }
+    </style>
 </head>
+
 <body>
 
-    <!-- Sua tabela / lista de veículos -->
-    <div id="lista-veiculos"></div>
+    <nav class="navbar">
+        <a href="index.html">
+            <img src="https://jzpshjdwspuslzkhljuz.supabase.co/storage/v1/object/public/fotos-veiculos/carros/WhatsApp%20Image%202025-01-28%20at%2016.14.57%20(2).jpeg" alt="Mazo Automóveis" class="logo-img">
+        </a>
+        <button id="btnLogout" class="btn-logout" onclick="fazerLogout()">Sair</button>
+    </nav>
 
-    <script>
-        // Substitua pelas suas credenciais do Supabase
-        const SUPABASE_URL = "SUA_URL_DO_SUPABASE";
-        const SUPABASE_KEY = "SUA_CHAVE_ANON_OU_SERVICE";
-        const supabase = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+    <div class="container">
+        
+        <div id="boxLogin" class="login-box">
+            <h2>Acesso Restrito</h2>
+            <form id="formLogin">
+                <div class="form-group">
+                    <label>E-mail</label>
+                    <input type="email" id="loginEmail" class="form-control" required placeholder="admin@mazo.com">
+                </div>
+                <div class="form-group">
+                    <label>Senha</label>
+                    <input type="password" id="loginSenha" class="form-control" required placeholder="******">
+                </div>
+                <button type="submit" class="btn-primary" style="width: 100%;">Entrar no Painel</button>
+            </form>
+        </div>
 
-        // Cache local para os veículos carregados
+        <div id="painelAdmin">
+            
+            <div class="admin-header-actions">
+                <h2>Gestão de Estoque</h2>
+                <button class="btn-primary" onclick="abrirModalCadastro()">+ Cadastrar Novo Veículo</button>
+            </div>
+
+            <div class="admin-card">
+                <div class="table-responsive">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Veículo</th>
+                                <th>Ano/Cor</th>
+                                <th>Preço</th>
+                                <th>Status</th>
+                                <th>Ações</th>
+                            </tr>
+                        </thead>
+                        <tbody id="listaEstoque"></tbody>
+                    </table>
+                </div>
+            </div>
+
+        </div>
+
+    </div>
+
+    <!-- MODAL DE CADASTRO -->
+    <div id="modalCadastro" class="modal-overlay">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Cadastrar Novo Veículo</h3>
+                <button class="btn-close-modal" onclick="fecharModalCadastro()">&times;</button>
+            </div>
+            <form id="formCadastrar">
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label>Marca</label>
+                        <input type="text" id="marca" class="form-control" required placeholder="Ex: Chevrolet">
+                    </div>
+                    <div class="form-group">
+                        <label>Modelo</label>
+                        <input type="text" id="modelo" class="form-control" required placeholder="Ex: Onix 1.0">
+                    </div>
+                    <div class="form-group">
+                        <label>Ano</label>
+                        <input type="number" id="ano" class="form-control" placeholder="2022">
+                    </div>
+                    <div class="form-group">
+                        <label>Preço (R$)</label>
+                        <input type="number" id="preco" class="form-control" placeholder="65000">
+                    </div>
+                    <div class="form-group">
+                        <label>Cor</label>
+                        <input type="text" id="cor" class="form-control" placeholder="Preto">
+                    </div>
+                    <div class="form-group">
+                        <label>KM</label>
+                        <input type="number" id="km" class="form-control" placeholder="45000">
+                    </div>
+                    <div class="form-group">
+                        <label>Câmbio</label>
+                        <select id="cambio" class="form-control">
+                            <option value="Manual">Manual</option>
+                            <option value="Automático">Automático</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>Combustível</label>
+                        <select id="combustivel" class="form-control">
+                            <option value="Flex">Flex</option>
+                            <option value="Gasolina">Gasolina</option>
+                            <option value="Diesel">Diesel</option>
+                            <option value="Elétrico">Elétrico</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group col-span-2">
+                        <label>Foto de Capa (Principal)</label>
+                        <input type="file" id="fotoCapaInput" class="form-control" accept="image/*" required>
+                    </div>
+
+                    <div class="form-group col-span-2">
+                        <label>Outras Fotos (Galeria - Selecione várias)</label>
+                        <input type="file" id="fotosGaleriaInput" class="form-control" accept="image/*" multiple>
+                    </div>
+
+                    <div class="form-group col-span-2">
+                        <label>Descrição Detalhada</label>
+                        <textarea id="descricao" class="form-control" rows="3" placeholder="Informações adicionais do carro..."></textarea>
+                    </div>
+                </div>
+                <button type="submit" id="btnSalvar" class="btn-primary" style="margin-top: 15px; width: 100%;">Salvar Veículo</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- MODAL DE EDIÇÃO -->
+    <div id="modalEditar" class="modal-overlay">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Editar Veículo</h3>
+                <button class="btn-close-modal" onclick="fecharModalEditar()">&times;</button>
+            </div>
+            <form id="formEditar">
+                <input type="hidden" id="editId">
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label>Marca</label>
+                        <input type="text" id="editMarca" class="form-control" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Modelo</label>
+                        <input type="text" id="editModelo" class="form-control" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Ano</label>
+                        <input type="number" id="editAno" class="form-control">
+                    </div>
+                    <div class="form-group">
+                        <label>Preço (R$)</label>
+                        <input type="number" id="editPreco" class="form-control">
+                    </div>
+                    <div class="form-group">
+                        <label>Cor</label>
+                        <input type="text" id="editCor" class="form-control">
+                    </div>
+                    <div class="form-group">
+                        <label>KM</label>
+                        <input type="number" id="editKm" class="form-control">
+                    </div>
+                    <div class="form-group">
+                        <label>Câmbio</label>
+                        <select id="editCambio" class="form-control">
+                            <option value="Manual">Manual</option>
+                            <option value="Automático">Automático</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>Combustível</label>
+                        <select id="editCombustivel" class="form-control">
+                            <option value="Flex">Flex</option>
+                            <option value="Gasolina">Gasolina</option>
+                            <option value="Diesel">Diesel</option>
+                            <option value="Elétrico">Elétrico</option>
+                        </select>
+                    </div>
+                    <div class="form-group col-span-2">
+                        <label>Substituir Foto de Capa (Opcional)</label>
+                        <input type="file" id="editFotoCapaInput" class="form-control" accept="image/*">
+                    </div>
+                    <div class="form-group col-span-2">
+                        <label>Descrição Detalhada</label>
+                        <textarea id="editDescricao" class="form-control" rows="3"></textarea>
+                    </div>
+                </div>
+                <button type="submit" id="btnSalvarEdicao" class="btn-primary" style="margin-top: 15px; width: 100%;">Atualizar Informações</button>
+            </form>
+        </div>
+    </div>
+
+    <script type="module">
+        import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js/+esm';
+
+        const SUPABASE_URL = "https://jzpshjdwspuslzkhljuz.supabase.co";
+        const SUPABASE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imp6cHNoamR3c3B1c2x6a2hsanV6Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODkwMjAzNDcsImV4cCI6MjEwNDU5NjM0N30.WCR4PkCwJpVMijtRboBtIL1QD90c5gVWcY47qer9OUA";
+
+        const supabase = createClient(SUPABASE_URL, SUPABASE_KEY);
         let estoqueCache = [];
 
-        // Exemplo de função para carregar dados do banco
-        async function carregarTabelaEstoque() {
-            const { data, error } = await supabase.from('veiculos').select('*');
-            if (error) {
-                console.error("Erro ao carregar veículos:", error);
-                return;
-            }
-            estoqueCache = data || [];
-            
-            // Renderização simples para fins de demonstração
-            const container = document.getElementById('lista-veiculos');
-            container.innerHTML = estoqueCache.map(v => `
-                <div style="border: 1px solid #ccc; margin: 10px; padding: 10px;">
-                    <h3>${v.modelo || 'Veículo'} (ID: ${v.id})</h3>
-                    <button onclick="excluirVeiculo('${v.id}')" style="background: red; color: white; padding: 8px;">
-                        Excluir Veículo e Fotos
-                    </button>
-                </div>
-            `).join('');
+        document.addEventListener('DOMContentLoaded', async () => {
+            const { data: { session } } = await supabase.auth.getSession();
+            if (session) exibirPainel();
+        });
+
+        document.getElementById('formLogin').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const email = document.getElementById('loginEmail').value;
+            const password = document.getElementById('loginSenha').value;
+
+            const { error } = await supabase.auth.signInWithPassword({ email, password });
+            if (error) alert("Erro ao acessar: " + error.message);
+            else exibirPainel();
+        });
+
+        window.fazerLogout = async function() {
+            await supabase.auth.signOut();
+            document.getElementById('painelAdmin').style.display = 'none';
+            document.getElementById('btnLogout').style.display = 'none';
+            document.getElementById('boxLogin').style.display = 'block';
         }
 
-        // Função para extrair o caminho relativo da imagem dentro do bucket
-        function extrairCaminhoBucket(url) {
-            if (!url) return null;
-            // Pega o caminho após o nome do bucket "fotos-veiculos/"
-            const partes = url.split('/fotos-veiculos/');
-            if (partes.length > 1) {
-                // Decodifica caracteres especiais na URL (como espaços ou símbolos)
-                return decodeURIComponent(partes[1]);
-            }
-            return null;
+        function exibirPainel() {
+            document.getElementById('boxLogin').style.display = 'none';
+            document.getElementById('painelAdmin').style.display = 'block';
+            document.getElementById('btnLogout').style.display = 'block';
+            carregarTabelaEstoque();
         }
 
-        // Função Principal: Exclui Veículo e Fotos Associadas
-        window.excluirVeiculo = async function(id) {
-            if (!confirm("Tem certeza que deseja EXCLUIR permanentemente este veículo e TODAS as suas fotos do banco e do Storage?")) {
-                return;
-            }
+        async function uploadArquivo(file) {
+            const fileExt = file.name.split('.').pop();
+            const fileName = `${Date.now()}_${Math.random().toString(36).substring(2)}.${fileExt}`;
+            const filePath = `carros/${fileName}`;
+
+            const { error } = await supabase.storage
+                .from('fotos-veiculos')
+                .upload(filePath, file);
+
+            if (error) throw error;
+
+            const { data } = supabase.storage
+                .from('fotos-veiculos')
+                .getPublicUrl(filePath);
+
+            return data.publicUrl;
+        }
+
+        // Modais de Cadastro
+        window.abrirModalCadastro = function() {
+            document.getElementById('modalCadastro').style.display = 'flex';
+        }
+
+        window.fecharModalCadastro = function() {
+            document.getElementById('modalCadastro').style.display = 'none';
+            document.getElementById('formCadastrar').reset();
+        }
+
+        document.getElementById('formCadastrar').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const btn = document.getElementById('btnSalvar');
+            btn.disabled = true;
+            btn.innerText = "Enviando imagens e salvando...";
 
             try {
-                // 1. Localiza o veículo no cache ou busca no Supabase
-                let v = estoqueCache.find(item => String(item.id) === String(id));
+                const fileCapa = document.getElementById('fotoCapaInput').files[0];
+                let fotoCapaUrl = await uploadArquivo(fileCapa);
 
-                if (!v) {
-                    const { data, error: fetchErr } = await supabase
-                        .from('veiculos')
-                        .select('*')
-                        .eq('id', id)
-                        .single();
-                    if (fetchErr) throw fetchErr;
-                    v = data;
+                const filesGaleria = document.getElementById('fotosGaleriaInput').files;
+                let galeriaUrls = [];
+
+                for (let i = 0; i < filesGaleria.length; i++) {
+                    const url = await uploadArquivo(filesGaleria[i]);
+                    galeriaUrls.push(url);
                 }
 
-                if (v) {
-                    let caminhosParaExcluir = [];
+                const novoCarro = {
+                    marca: document.getElementById('marca').value,
+                    modelo: document.getElementById('modelo').value,
+                    ano: document.getElementById('ano').value ? Number(document.getElementById('ano').value) : null,
+                    preco: document.getElementById('preco').value ? Number(document.getElementById('preco').value) : null,
+                    cor: document.getElementById('cor').value,
+                    km: document.getElementById('km').value ? Number(document.getElementById('km').value) : null,
+                    cambio: document.getElementById('cambio').value,
+                    combustivel: document.getElementById('combustivel').value,
+                    foto_url: fotoCapaUrl,
+                    fotos_galeria: galeriaUrls,
+                    descricao: document.getElementById('descricao').value,
+                    status: 'disponivel'
+                };
 
-                    // a) Adiciona a Foto Principal / Capa
-                    const caminhoCapa = extrairCaminhoBucket(v.foto_url);
-                    if (caminhoCapa) {
-                        caminhosParaExcluir.push(caminhoCapa);
-                    }
+                const { error } = await supabase.from('veiculos').insert([novoCarro]);
+                if (error) throw error;
 
-                    // b) Adiciona as Fotos da Galeria (se existirem)
-                    if (v.fotos_galeria) {
-                        let galeria = v.fotos_galeria;
-                        
-                        // Caso a galeria esteja armazenada como string JSON
-                        if (typeof galeria === 'string') {
-                            try {
-                                galeria = JSON.parse(galeria);
-                            } catch (e) {
-                                console.warn("Não foi possível converter fotos_galeria de string para JSON:", e);
-                            }
-                        }
-
-                        // Adiciona cada URL válida da galeria para remoção
-                        if (Array.isArray(galeria)) {
-                            galeria.forEach(url => {
-                                const caminho = extrairCaminhoBucket(url);
-                                if (caminho) caminhosParaExcluir.push(caminho);
-                            });
-                        }
-                    }
-
-                    // c) Exclui todos os arquivos acumulados do Storage do Supabase
-                    if (caminhosParaExcluir.length > 0) {
-                        const { data: storageData, error: storageError } = await supabase
-                            .storage
-                            .from('fotos-veiculos')
-                            .remove(caminhosParaExcluir);
-
-                        if (storageError) {
-                            console.warn("Aviso: Erro ao remover algumas fotos do Storage:", storageError.message);
-                        } else {
-                            console.log("Fotos removidas do Storage com sucesso:", storageData);
-                        }
-                    }
-                }
-
-                // 2. Exclui o registro da tabela 'veiculos'
-                const { error: dbError } = await supabase
-                    .from('veiculos')
-                    .delete()
-                    .eq('id', id);
-
-                if (dbError) throw dbError;
-
-                alert("Veículo e suas fotos foram excluídos com sucesso!");
-                
-                // Recarrega a tabela de estoque na página
+                alert("Veículo cadastrado com sucesso!");
+                fecharModalCadastro();
                 carregarTabelaEstoque();
 
             } catch (err) {
-                console.error("Erro no processo de exclusão:", err);
-                alert("Erro ao excluir veículo: " + err.message);
+                alert("Erro ao cadastrar: " + err.message);
+            } finally {
+                btn.disabled = false;
+                btn.innerText = "Salvar Veículo";
             }
-        };
+        });
 
-        // Carrega os veículos ao iniciar a página
-        carregarTabelaEstoque();
+        async function carregarTabelaEstoque() {
+            const tbody = document.getElementById('listaEstoque');
+            tbody.innerHTML = '<tr><td colspan="5">Carregando...</td></tr>';
+
+            const { data: veiculos, error } = await supabase
+                .from('veiculos')
+                .select('*')
+                .order('id', { ascending: false });
+
+            if (error) {
+                tbody.innerHTML = '<tr><td colspan="5">Erro ao carregar veículos.</td></tr>';
+                return;
+            }
+
+            estoqueCache = veiculos || [];
+
+            if (estoqueCache.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="5">Nenhum veículo cadastrado.</td></tr>';
+                return;
+            }
+
+            tbody.innerHTML = '';
+            estoqueCache.forEach(v => {
+                const precoFmt = v.preco ? `R$ ${Number(v.preco).toLocaleString('pt-BR')}` : 'N/A';
+                const isVendido = v.status === 'vendido';
+                const statusTag = isVendido 
+                    ? '<span class="badge-status badge-vendido">Vendido</span>' 
+                    : '<span class="badge-status badge-disponivel">Disponível</span>';
+
+                const btnStatusHTML = isVendido
+                    ? `<button class="btn-action btn-disponivel" onclick="alterarStatus('${v.id}', 'disponivel')">Disponibilizar</button>`
+                    : `<button class="btn-action btn-vendido" onclick="alterarStatus('${v.id}', 'vendido')">Vendido</button>`;
+
+                const tr = document.createElement('tr');
+                tr.innerHTML = `
+                    <td><strong>${v.marca || ''} ${v.modelo || ''}</strong></td>
+                    <td>${v.ano || 'N/A'} - ${v.cor || 'N/A'}</td>
+                    <td>${precoFmt}</td>
+                    <td>${statusTag}</td>
+                    <td>
+                        ${btnStatusHTML}
+                        <button class="btn-action btn-editar" onclick="abrirModalEditar('${v.id}')">Editar</button>
+                        <button class="btn-action btn-excluir" onclick="excluirVeiculo('${v.id}')">Excluir</button>
+                    </td>
+                `;
+                tbody.appendChild(tr);
+            });
+        }
+
+        window.alterarStatus = async function(id, novoStatus) {
+            const acao = novoStatus === 'vendido' ? 'VENDIDO' : 'DISPONÍVEL';
+            if (confirm(`Deseja alterar o status deste veículo para ${acao}?`)) {
+                const { error } = await supabase
+                    .from('veiculos')
+                    .update({ status: novoStatus })
+                    .eq('id', id);
+
+                if (error) alert("Erro ao atualizar status: " + error.message);
+                else carregarTabelaEstoque();
+            }
+        }
+
+        // Modais de Edição
+        window.abrirModalEditar = function(id) {
+            const v = estoqueCache.find(item => String(item.id) === String(id));
+            if (!v) return;
+
+            document.getElementById('editId').value = v.id;
+            document.getElementById('editMarca').value = v.marca || '';
+            document.getElementById('editModelo').value = v.modelo || '';
+            document.getElementById('editAno').value = v.ano || '';
+            document.getElementById('editPreco').value = v.preco || '';
+            document.getElementById('editCor').value = v.cor || '';
+            document.getElementById('editKm').value = v.km || '';
+            document.getElementById('editCambio').value = v.cambio || 'Manual';
+            document.getElementById('editCombustivel').value = v.combustivel || 'Flex';
+            document.getElementById('editDescricao').value = v.descricao || '';
+
+            document.getElementById('modalEditar').style.display = 'flex';
+        }
+
+        window.fecharModalEditar = function() {
+            document.getElementById('modalEditar').style.display = 'none';
+        }
+
+        document.getElementById('formEditar').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const btn = document.getElementById('btnSalvarEdicao');
+            btn.disabled = true;
+            btn.innerText = "Atualizando...";
+
+            try {
+                const id = document.getElementById('editId').value;
+                const fileCapa = document.getElementById('editFotoCapaInput').files[0];
+
+                const dadosAtualizados = {
+                    marca: document.getElementById('editMarca').value,
+                    modelo: document.getElementById('editModelo').value,
+                    ano: document.getElementById('editAno').value ? Number(document.getElementById('editAno').value) : null,
+                    preco: document.getElementById('editPreco').value ? Number(document.getElementById('editPreco').value) : null,
+                    cor: document.getElementById('editCor').value,
+                    km: document.getElementById('editKm').value ? Number(document.getElementById('editKm').value) : null,
+                    cambio: document.getElementById('editCambio').value,
+                    combustivel: document.getElementById('editCombustivel').value,
+                    descricao: document.getElementById('editDescricao').value
+                };
+
+                if (fileCapa) {
+                    dadosAtualizados.foto_url = await uploadArquivo(fileCapa);
+                }
+
+                const { error } = await supabase
+                    .from('veiculos')
+                    .update(dadosAtualizados)
+                    .eq('id', id);
+
+                if (error) throw error;
+
+                alert("Veículo atualizado com sucesso!");
+                fecharModalEditar();
+                carregarTabelaEstoque();
+
+            } catch (err) {
+                alert("Erro ao editar: " + err.message);
+            } finally {
+                btn.disabled = false;
+                btn.innerText = "Atualizar Informações";
+            }
+        });
+
+        window.excluirVeiculo = async function(id) {
+            if (confirm("Tem certeza que deseja EXCLUIR permanentemente este veículo?")) {
+                const { error } = await supabase.from('veiculos').delete().eq('id', id);
+                if (error) alert("Erro: " + error.message);
+                else carregarTabelaEstoque();
+            }
+        }
     </script>
 </body>
 </html>
