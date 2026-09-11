@@ -3,7 +3,8 @@
 
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <meta name="description" content="Mazo Automóveis - Estoque de veículos novos e seminovos em Braço do Norte - SC. Confira nossas ofertas.">
     <title>Mazo Automóveis - Estoque de Veículos</title>
 
     <style>
@@ -21,47 +22,115 @@
 
         * { margin: 0; padding: 0; box-sizing: border-box; }
 
+        html { scroll-behavior: smooth; }
+
         body {
             font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
             background-color: var(--wm-gray-bg);
             color: var(--wm-text-dark);
             display: flex; flex-direction: column; min-height: 100vh;
+            -webkit-text-size-adjust: 100%;
         }
 
+        a { color: inherit; }
+
+        /* ---------- Navbar ---------- */
         .navbar {
-            background-color: var(--wm-dark); color: white; padding: 12px 20px;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.15); margin-bottom: 25px;
+            background-color: var(--wm-dark); color: white;
+            padding: 10px 20px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
             border-bottom: 3px solid var(--wm-red);
+            position: sticky; top: 0; z-index: 30;
         }
 
         .navbar-content {
-            max-width: 1200px; margin: 0 auto; display: flex; align-items: center; justify-content: space-between;
+            max-width: 1200px; margin: 0 auto;
+            display: flex; align-items: center; justify-content: space-between;
         }
 
-        .logo-img { height: 50px; width: auto; object-fit: contain; }
+        .logo-img { height: 44px; width: auto; object-fit: contain; display: block; }
 
-        .container { max-width: 1200px; margin: 0 auto; padding: 0 20px; flex: 1; width: 100%; }
+        .navbar a.logo-link { display: inline-flex; align-items: center; }
 
+        .navbar-cta {
+            display: inline-flex; align-items: center; gap: 6px;
+            background-color: var(--wm-red); color: white; text-decoration: none;
+            padding: 9px 14px; border-radius: 6px; font-size: 0.85rem; font-weight: 700;
+            transition: background-color 0.15s ease;
+            white-space: nowrap;
+        }
+        .navbar-cta:hover, .navbar-cta:focus-visible { background-color: var(--wm-red-hover); }
+
+        @media (max-width: 480px) {
+            .navbar-cta .cta-label { display: none; }
+            .navbar-cta { padding: 10px; }
+        }
+
+        /* ---------- Layout ---------- */
+        .container { max-width: 1200px; margin: 0 auto; padding: 0 16px; flex: 1; width: 100%; }
+
+        .page-header { padding: 20px 0 16px; }
+        .page-header h1 {
+            font-size: clamp(1.3rem, 4vw, 1.7rem);
+            font-weight: 800;
+            letter-spacing: -0.01em;
+        }
+        .page-header p { color: var(--wm-text-muted); font-size: 0.9rem; margin-top: 4px; }
+
+        /* ---------- Search / filter bar ---------- */
         .busca-card {
-            background: white; padding: 20px; border-radius: var(--border-radius);
-            border: 1px solid var(--wm-border); margin-bottom: 25px;
-            display: grid; grid-template-columns: 2fr 1fr; gap: 15px; align-items: center;
+            background: white; padding: 16px; border-radius: var(--border-radius);
+            border: 1px solid var(--wm-border); margin-bottom: 18px;
+            display: grid; grid-template-columns: 2fr 1fr; gap: 12px; align-items: center;
+            position: sticky; top: 64px; z-index: 20;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.04);
         }
 
-        @media (max-width: 768px) { .busca-card { grid-template-columns: 1fr; } }
+        .campo-busca-wrapper { position: relative; display: flex; align-items: center; }
+        .campo-busca-wrapper .icone-busca {
+            position: absolute; left: 14px; font-size: 1rem; opacity: 0.5; pointer-events: none;
+        }
+        .campo-busca-wrapper .form-control { padding-left: 38px; }
 
         .form-control {
-            width: 100%; padding: 12px; border: 1px solid var(--wm-border);
+            width: 100%; padding: 13px 12px; border: 1px solid var(--wm-border);
             border-radius: 6px; font-size: 0.95rem; outline: none;
+            background: white; color: var(--wm-text-dark);
+            min-height: 46px;
+            transition: border-color 0.15s ease;
+        }
+
+        select.form-control { appearance: none; -webkit-appearance: none;
+            background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23666666' stroke-width='2'><polyline points='6 9 12 15 18 9'/></svg>");
+            background-repeat: no-repeat; background-position: right 12px center; background-size: 16px;
+            padding-right: 36px;
         }
 
         .form-control:focus { border-color: var(--wm-red); }
 
+        .resultado-contagem {
+            font-size: 0.85rem; color: var(--wm-text-muted); margin-bottom: 14px;
+        }
+        .resultado-contagem strong { color: var(--wm-text-dark); }
+
+        @media (max-width: 768px) {
+            .busca-card { grid-template-columns: 1fr; top: 60px; }
+        }
+
+        /* ---------- Vehicle grid ---------- */
         .grid-veiculos {
             display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-            gap: 20px;
+            grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+            gap: 18px;
             margin-bottom: 40px;
+        }
+
+        @media (max-width: 620px) {
+            .grid-veiculos { grid-template-columns: repeat(2, 1fr); gap: 10px; }
+        }
+
+        @media (max-width: 380px) {
+            .grid-veiculos { grid-template-columns: 1fr; }
         }
 
         .card-carro {
@@ -71,34 +140,84 @@
             position: relative; text-decoration: none; color: inherit;
         }
 
-        .card-carro:hover {
+        .card-carro:hover, .card-carro:focus-visible {
             transform: translateY(-4px); box-shadow: 0 10px 20px rgba(0,0,0,0.1);
         }
+        .card-carro:focus-visible { outline: 2px solid var(--wm-red); outline-offset: 2px; }
 
-        .img-wrapper { position: relative; width: 100%; height: 200px; background-color: #111; }
-        .img-wrapper img { width: 100%; height: 100%; object-fit: cover; }
+        .img-wrapper { position: relative; width: 100%; aspect-ratio: 4 / 3; background-color: #111; }
+        .img-wrapper img { width: 100%; height: 100%; object-fit: cover; display: block; }
 
         .badge-status-card {
             position: absolute; top: 10px; right: 10px; background: rgba(0,0,0,0.8);
-            color: white; padding: 4px 8px; border-radius: 4px; font-size: 0.75rem;
-            font-weight: 700; text-transform: uppercase;
+            color: white; padding: 4px 8px; border-radius: 4px; font-size: 0.7rem;
+            font-weight: 700; text-transform: uppercase; letter-spacing: 0.02em;
         }
 
-        .card-body { padding: 15px; display: flex; flex-direction: column; flex: 1; }
-        .card-titulo { font-size: 1.1rem; font-weight: 800; color: var(--wm-text-dark); margin-bottom: 5px; text-transform: uppercase; }
-        .card-detalhes-linha { font-size: 0.85rem; color: var(--wm-text-muted); margin-bottom: 12px; }
-        .card-preco { font-size: 1.3rem; font-weight: 800; color: var(--wm-red); margin-top: auto; padding-top: 10px; }
+        .card-body { padding: 12px 14px 14px; display: flex; flex-direction: column; flex: 1; }
+        .card-titulo {
+            font-size: clamp(0.95rem, 2.4vw, 1.1rem);
+            font-weight: 800; color: var(--wm-text-dark); margin-bottom: 4px;
+            text-transform: uppercase; line-height: 1.25;
+        }
+        .card-detalhes-linha { font-size: 0.82rem; color: var(--wm-text-muted); margin-bottom: 10px; line-height: 1.4; }
+        .card-preco { font-size: clamp(1.05rem, 3vw, 1.3rem); font-weight: 800; color: var(--wm-red); margin-top: auto; padding-top: 8px; }
 
+        /* ---------- States: loading / empty / error ---------- */
         .mensagem-alerta {
-            text-align: center; color: var(--wm-text-muted); padding: 60px 0;
-            font-size: 1.2rem; background: white; border-radius: var(--border-radius); grid-column: 1 / -1;
+            text-align: center; color: var(--wm-text-muted); padding: 60px 20px;
+            font-size: 1.05rem; background: white; border-radius: var(--border-radius); grid-column: 1 / -1;
+            border: 1px solid var(--wm-border);
+        }
+        .mensagem-alerta .emoji { font-size: 2rem; display: block; margin-bottom: 10px; }
+
+        .card-skeleton {
+            background: white; border-radius: var(--border-radius); border: 1px solid var(--wm-border);
+            overflow: hidden; display: flex; flex-direction: column;
+        }
+        .skel-img { width: 100%; aspect-ratio: 4/3; background: #eceff3; }
+        .skel-body { padding: 12px 14px 14px; }
+        .skel-line { height: 12px; border-radius: 4px; background: #eceff3; margin-bottom: 8px; }
+        .skel-line.w60 { width: 60%; }
+        .skel-line.w40 { width: 40%; }
+        .skel-line.w30 { width: 30%; height: 18px; margin-top: 10px; }
+        .skel-img, .skel-line {
+            background: linear-gradient(90deg, #eceff3 25%, #f6f8fa 37%, #eceff3 63%);
+            background-size: 400% 100%;
+            animation: skeleton-pulse 1.4s ease infinite;
+        }
+        @keyframes skeleton-pulse {
+            0% { background-position: 100% 50%; }
+            100% { background-position: 0 50%; }
+        }
+        @media (prefers-reduced-motion: reduce) {
+            .skel-img, .skel-line { animation: none; }
+            html { scroll-behavior: auto; }
         }
 
-        .footer { background-color: var(--wm-dark); color: #a0a5b5; padding: 40px 20px 20px; border-top: 3px solid var(--wm-red); margin-top: auto; }
-        .footer-content { max-width: 1200px; margin: 0 auto; display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 30px; padding-bottom: 30px; border-bottom: 1px solid #2e3040; }
-        .footer-col h3 { color: white; font-size: 1.1rem; margin-bottom: 15px; font-weight: 700; }
-        .footer-col p { font-size: 0.95rem; line-height: 1.6; margin-bottom: 8px; }
-        .footer-bottom { max-width: 1200px; margin: 20px auto 0; text-align: center; font-size: 0.85rem; color: #707585; }
+        /* ---------- Footer ---------- */
+        .footer { background-color: var(--wm-dark); color: #a0a5b5; padding: 36px 20px 20px; border-top: 3px solid var(--wm-red); margin-top: auto; }
+        .footer-content { max-width: 1200px; margin: 0 auto; display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 28px; padding-bottom: 26px; border-bottom: 1px solid #2e3040; }
+        .footer-col h3 { color: white; font-size: 1.05rem; margin-bottom: 12px; font-weight: 700; }
+        .footer-col p { font-size: 0.92rem; line-height: 1.65; margin-bottom: 6px; }
+        .footer-col a.footer-link {
+            color: #a0a5b5; text-decoration: none; display: inline-flex; align-items: center; gap: 6px;
+            margin-bottom: 6px; transition: color 0.15s ease;
+        }
+        .footer-col a.footer-link:hover, .footer-col a.footer-link:focus-visible { color: white; }
+        .footer-bottom { max-width: 1200px; margin: 18px auto 0; text-align: center; font-size: 0.82rem; color: #707585; }
+
+        /* ---------- Floating WhatsApp button (mobile-friendly quick contact) ---------- */
+        .whats-float {
+            position: fixed; right: 16px; bottom: 16px; z-index: 40;
+            width: 54px; height: 54px; border-radius: 50%;
+            background-color: var(--wm-red); color: white;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 1.5rem; text-decoration: none;
+            box-shadow: 0 6px 16px rgba(0,0,0,0.25);
+            transition: background-color 0.15s ease, transform 0.15s ease;
+        }
+        .whats-float:hover, .whats-float:focus-visible { background-color: var(--wm-red-hover); transform: scale(1.05); }
     </style>
 </head>
 
@@ -106,22 +225,35 @@
 
     <nav class="navbar">
         <div class="navbar-content">
-            <a href="index.html">
+            <a href="index.html" class="logo-link" aria-label="Mazo Automóveis - Início">
                 <img src="https://jzpshjdwspuslzkhljuz.supabase.co/storage/v1/object/public/fotos-veiculos/carros/logo_fundo_preto.png" alt="Mazo Automóveis" class="logo-img">
+            </a>
+            <a href="https://wa.me/554899872525" class="navbar-cta" target="_blank" rel="noopener">
+                <span aria-hidden="true">💬</span><span class="cta-label">WhatsApp</span>
             </a>
         </div>
     </nav>
 
     <div class="container">
+        <div class="page-header">
+            <h1>Estoque de Veículos</h1>
+            <p>Confira os veículos disponíveis para venda</p>
+        </div>
+
         <div class="busca-card">
-            <input type="text" id="inputBusca" class="form-control" placeholder="Buscar por modelo ou palavra-chave..." oninput="filtrarVeiculos()">
-            <select id="selectMarca" class="form-control" onchange="filtrarVeiculos()">
+            <div class="campo-busca-wrapper">
+                <span class="icone-busca" aria-hidden="true">🔎</span>
+                <input type="text" id="inputBusca" class="form-control" placeholder="Buscar por modelo ou palavra-chave..." inputmode="search" oninput="filtrarVeiculos()" aria-label="Buscar veículo">
+            </div>
+            <select id="selectMarca" class="form-control" onchange="filtrarVeiculos()" aria-label="Filtrar por marca">
                 <option value="todas">Todas as Marcas</option>
             </select>
         </div>
 
-        <main id="listaVeiculos" class="grid-veiculos">
-            <div class="mensagem-alerta">Carregando estoque...</div>
+        <div id="resultadoContagem" class="resultado-contagem" hidden></div>
+
+        <main id="listaVeiculos" class="grid-veiculos" aria-live="polite">
+            <!-- skeleton loaders inserted by JS -->
         </main>
     </div>
 
@@ -138,21 +270,43 @@
             </div>
             <div class="footer-col">
                 <h3>Atendimento</h3>
-                <p>📞 (48) 99987-2525</p>
-                <p>💬 Atendimento via WhatsApp de Segunda a Sábado</p>
+                <a class="footer-link" href="tel:+5548999872525">📞 (48) 99987-2525</a>
+                <a class="footer-link" href="https://wa.me/554899872525" target="_blank" rel="noopener">💬 Fale conosco pelo WhatsApp</a>
+                <p>Atendimento de Segunda a Sábado</p>
             </div>
         </div>
         <div class="footer-bottom">&copy; Mazo Automóveis - Todos os direitos reservados.</div>
     </footer>
+
+    <a href="https://wa.me/554899872525" class="whats-float" target="_blank" rel="noopener" aria-label="Falar no WhatsApp">💬</a>
 
     <script>
         const SUPABASE_URL = "https://jzpshjdwspuslzkhljuz.supabase.co";
         const SUPABASE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imp6cHNoamR3c3B1c2x6a2hsanV6Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODkwMjAzNDcsImV4cCI6MjEwNDU5NjM0N30.WCR4PkCwJpVMijtRboBtIL1QD90c5gVWcY47qer9OUA";
 
         let todosVeiculos = [];
+        let debounceTimer = null;
+
+        function renderSkeletons(qtd = 6) {
+            const container = document.getElementById("listaVeiculos");
+            let html = "";
+            for (let i = 0; i < qtd; i++) {
+                html += `
+                    <div class="card-skeleton">
+                        <div class="skel-img"></div>
+                        <div class="skel-body">
+                            <div class="skel-line w60"></div>
+                            <div class="skel-line w40"></div>
+                            <div class="skel-line w30"></div>
+                        </div>
+                    </div>`;
+            }
+            container.innerHTML = html;
+        }
 
         async function carregarEstoque() {
             const container = document.getElementById("listaVeiculos");
+            renderSkeletons();
 
             try {
                 const resposta = await fetch(`${SUPABASE_URL}/rest/v1/veiculos?select=*`, {
@@ -167,7 +321,8 @@
 
             } catch (erro) {
                 console.error(erro);
-                container.innerHTML = `<div class="mensagem-alerta">Erro ao carregar o estoque. Tente novamente mais tarde.</div>`;
+                container.innerHTML = `<div class="mensagem-alerta"><span class="emoji" aria-hidden="true">⚠️</span>Erro ao carregar o estoque. Tente novamente mais tarde.</div>`;
+                document.getElementById("resultadoContagem").hidden = true;
             }
         }
 
@@ -182,7 +337,13 @@
         }
 
         function filtrarVeiculos() {
+            clearTimeout(debounceTimer);
+            debounceTimer = setTimeout(aplicarFiltro, 120);
+        }
+
+        function aplicarFiltro() {
             const container = document.getElementById("listaVeiculos");
+            const contagem = document.getElementById("resultadoContagem");
             const busca = document.getElementById("inputBusca").value.toLowerCase();
             const marcaSelecionada = document.getElementById("selectMarca").value;
 
@@ -193,12 +354,17 @@
                 return textoMatch && marcaMatch && statusMatch;
             });
 
+            contagem.hidden = false;
+            contagem.innerHTML = `<strong>${filtrados.length}</strong> veículo${filtrados.length === 1 ? '' : 's'} encontrado${filtrados.length === 1 ? '' : 's'}`;
+
             if (filtrados.length === 0) {
-                container.innerHTML = `<div class="mensagem-alerta">Nenhum veículo encontrado.</div>`;
+                container.innerHTML = `<div class="mensagem-alerta"><span class="emoji" aria-hidden="true">🔍</span>Nenhum veículo encontrado. Tente outra busca ou marca.</div>`;
                 return;
             }
 
             container.innerHTML = "";
+            const frag = document.createDocumentFragment();
+
             filtrados.forEach(v => {
                 const foto = v.foto_url || 'https://via.placeholder.com/400x300?text=Sem+Foto';
                 const precoFmt = v.preco ? `R$ ${Number(v.preco).toLocaleString('pt-BR')}` : 'Sob Consulta';
@@ -210,7 +376,7 @@
 
                 card.innerHTML = `
                     <div class="img-wrapper">
-                        <img src="${foto}" alt="${v.marca} ${v.modelo}">
+                        <img src="${foto}" alt="${v.marca || ''} ${v.modelo || ''}" loading="lazy">
                         <span class="badge-status-card">Disponível</span>
                     </div>
                     <div class="card-body">
@@ -222,8 +388,10 @@
                     </div>
                 `;
 
-                container.appendChild(card);
+                frag.appendChild(card);
             });
+
+            container.appendChild(frag);
         }
 
         carregarEstoque();
