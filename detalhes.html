@@ -84,6 +84,43 @@
         @media (min-width: 850px) { .img-principal-wrapper { aspect-ratio: 16 / 10; } }
         .img-principal { width: 100%; height: 100%; object-fit: contain; display: block; }
 
+        .badge-fotos-count {
+            position: absolute; bottom: 10px; right: 10px; background: rgba(0,0,0,0.65);
+            color: white; padding: 3px 8px; border-radius: 4px; font-size: 0.75rem; font-weight: 600;
+            pointer-events: none;
+        }
+
+        /* ---------- Lightbox ---------- */
+        .lightbox-overlay {
+            display: none; position: fixed; inset: 0; z-index: 100;
+            background: rgba(10, 10, 10, 0.95);
+            align-items: center; justify-content: center;
+        }
+        .lightbox-overlay.aberto { display: flex; }
+        .lightbox-img { max-width: 90vw; max-height: 85vh; object-fit: contain; user-select: none; }
+        .lightbox-fechar {
+            position: absolute; top: 16px; right: 16px; width: 42px; height: 42px;
+            border-radius: 50%; border: none; background: rgba(255,255,255,0.12); color: white;
+            font-size: 1.2rem; cursor: pointer; display: flex; align-items: center; justify-content: center;
+        }
+        .lightbox-fechar:hover, .lightbox-fechar:focus-visible { background: rgba(255,255,255,0.25); }
+        .lightbox-nav {
+            position: absolute; top: 50%; transform: translateY(-50%);
+            width: 46px; height: 46px; border-radius: 50%; border: none;
+            background: rgba(255,255,255,0.12); color: white; font-size: 1.8rem; cursor: pointer;
+            display: flex; align-items: center; justify-content: center; line-height: 1;
+        }
+        .lightbox-nav:hover, .lightbox-nav:focus-visible { background: rgba(255,255,255,0.25); }
+        .lightbox-prev { left: 12px; }
+        .lightbox-next { right: 12px; }
+        .lightbox-contador {
+            position: absolute; bottom: 18px; left: 50%; transform: translateX(-50%);
+            color: white; font-size: 0.85rem; background: rgba(255,255,255,0.12); padding: 4px 12px; border-radius: 20px;
+        }
+        @media (max-width: 480px) {
+            .lightbox-nav { width: 40px; height: 40px; font-size: 1.5rem; }
+        }
+
         .thumbs-grid {
             display: flex; gap: 8px; padding: 10px; overflow-x: auto;
             background: #fafafa; border-top: 1px solid var(--wm-border);
@@ -254,6 +291,32 @@
 
         const parametros = new URLSearchParams(window.location.search);
         const id = parametros.get("id");
+        const FOTO_PLACEHOLDER = 'https://via.placeholder.com/800x500?text=Sem+Foto';
+
+        let fotosAtuais = [];
+        let indiceAtual = 0;
+
+        // Monta a lista de fotos de um veículo a partir de foto_url + fotos_galeria,
+        // removendo vazios/duplicados. Mesma lógica usada em index.html.
+        function obterFotos(v) {
+            let fotos = [];
+
+            if (v.foto_url && String(v.foto_url).trim()) fotos.push(String(v.foto_url).trim());
+
+            if (v.fotos_galeria) {
+                let galeria = v.fotos_galeria;
+                if (typeof galeria === 'string') {
+                    try { galeria = JSON.parse(galeria); } catch (e) { galeria = []; }
+                }
+                if (Array.isArray(galeria)) {
+                    galeria.forEach(url => {
+                        if (url && String(url).trim()) fotos.push(String(url).trim());
+                    });
+                }
+            }
+
+            return [...new Set(fotos)];
+        }
 
         function renderSkeleton() {
             const container = document.getElementById("conteudoVeiculo");
@@ -306,29 +369,18 @@
                 const precoFormatado = v.preco ? `R$ ${Number(v.preco).toLocaleString('pt-BR')}` : 'Sob Consulta';
                 const kmFormatado = v.km ? `${Number(v.km).toLocaleString('pt-BR')} km` : 'Não informado';
 
-                let listaFotos = [];
-                if (v.foto_url) listaFotos.push(v.foto_url);
+                fotosAtuais = obterFotos(v);
+                indiceAtual = 0;
 
-                if (v.fotos_galeria) {
-                    let galeriaExtra = v.fotos_galeria;
-                    if (typeof galeriaExtra === 'string') {
-                        try { galeriaExtra = JSON.parse(galeriaExtra); } catch (e) {}
-                    }
-                    if (Array.isArray(galeriaExtra)) {
-                        listaFotos = listaFotos.concat(galeriaExtra);
-                    }
-                }
-
-                listaFotos = [...new Set(listaFotos)];
-
-                const fotoCapa = listaFotos[0] || 'https://via.placeholder.com/800x500?text=Sem+Foto';
+                const listaFotos = fotosAtuais;
+                const fotoCapa = listaFotos[0] || FOTO_PLACEHOLDER;
                 const anoTexto = v.ano ? `Ano ${v.ano}` : 'Ano não informado';
                 const corTexto = v.cor ? `Cor ${v.cor}` : 'Cor não informada';
                 const mensagemWhatsApp = encodeURIComponent(`Olá! Tenho interesse no veículo ${v.marca} ${v.modelo} (${anoTexto}, ${corTexto} - Ref. ID: ${v.id}).`);
 
                 let htmlThumbs = '';
                 listaFotos.forEach((imgUrl, idx) => {
-                    htmlThumbs += `<img class="thumb-item ${idx === 0 ? 'active' : ''}" src="${imgUrl}" alt="Foto ${idx + 1} de ${v.marca || ''} ${v.modelo || ''}" tabindex="0" onclick="trocarFoto('${imgUrl}', this)" onkeypress="if(event.key==='Enter') trocarFoto('${imgUrl}', this)">`;
+                    htmlThumbs += `<img class="thumb-item ${idx === 0 ? 'active' : ''}" src="${imgUrl}" alt="Foto ${idx + 1} de ${v.marca || ''} ${v.modelo || ''}" tabindex="0" loading="lazy" onerror="this.onerror=null; this.src='${FOTO_PLACEHOLDER}';" onclick="trocarFoto('${imgUrl}', this, ${idx})" onkeypress="if(event.key==='Enter') trocarFoto('${imgUrl}', this, ${idx})">`;
                 });
 
                 document.title = `${v.marca || ''} ${v.modelo || ''} - Mazo Automóveis`;
@@ -338,7 +390,8 @@
                         <div>
                             <div class="galeria-card">
                                 <div class="img-principal-wrapper">
-                                    <img id="imgDestaque" class="img-principal" src="${fotoCapa}" alt="${v.marca || ''} ${v.modelo || ''}">
+                                    <img id="imgDestaque" class="img-principal" src="${fotoCapa}" alt="${v.marca || ''} ${v.modelo || ''}" onerror="this.onerror=null; this.src='${FOTO_PLACEHOLDER}';" onclick="abrirLightbox()" style="${listaFotos.length ? 'cursor: zoom-in;' : ''}">
+                                    ${listaFotos.length > 1 ? `<span class="badge-fotos-count" id="contadorFotos">1 / ${listaFotos.length}</span>` : ''}
                                 </div>
                                 ${listaFotos.length > 1 ? `<div class="thumbs-grid">${htmlThumbs}</div>` : ''}
                             </div>
@@ -379,10 +432,73 @@
             }
         }
 
-        window.trocarFoto = function(src, elemento) {
+        window.trocarFoto = function(src, elemento, idx) {
             document.getElementById('imgDestaque').src = src;
             document.querySelectorAll('.thumb-item').forEach(el => el.classList.remove('active'));
             elemento.classList.add('active');
+            if (typeof idx === 'number') {
+                indiceAtual = idx;
+                const contador = document.getElementById('contadorFotos');
+                if (contador) contador.textContent = `${idx + 1} / ${fotosAtuais.length}`;
+            }
+        }
+
+        // ---------- Lightbox (visualização em tela cheia) ----------
+        function criarLightbox() {
+            if (document.getElementById('lightboxOverlay')) return;
+            const overlay = document.createElement('div');
+            overlay.id = 'lightboxOverlay';
+            overlay.className = 'lightbox-overlay';
+            overlay.innerHTML = `
+                <button class="lightbox-fechar" aria-label="Fechar" onclick="fecharLightbox()">✕</button>
+                <button class="lightbox-nav lightbox-prev" aria-label="Foto anterior" onclick="navegarLightbox(-1)">‹</button>
+                <img class="lightbox-img" id="lightboxImg" src="" alt="">
+                <button class="lightbox-nav lightbox-next" aria-label="Próxima foto" onclick="navegarLightbox(1)">›</button>
+                <div class="lightbox-contador" id="lightboxContador"></div>
+            `;
+            overlay.addEventListener('click', (e) => { if (e.target === overlay) fecharLightbox(); });
+            document.body.appendChild(overlay);
+        }
+
+        window.abrirLightbox = function() {
+            if (!fotosAtuais.length) return;
+            criarLightbox();
+            document.getElementById('lightboxOverlay').classList.add('aberto');
+            document.body.style.overflow = 'hidden';
+            atualizarLightbox();
+            document.addEventListener('keydown', teclasLightbox);
+        }
+
+        window.fecharLightbox = function() {
+            const overlay = document.getElementById('lightboxOverlay');
+            if (overlay) overlay.classList.remove('aberto');
+            document.body.style.overflow = '';
+            document.removeEventListener('keydown', teclasLightbox);
+        }
+
+        window.navegarLightbox = function(direcao) {
+            indiceAtual = (indiceAtual + direcao + fotosAtuais.length) % fotosAtuais.length;
+            atualizarLightbox();
+            const thumb = document.querySelectorAll('.thumb-item')[indiceAtual];
+            if (thumb) trocarFoto(fotosAtuais[indiceAtual], thumb, indiceAtual);
+        }
+
+        function atualizarLightbox() {
+            const img = document.getElementById('lightboxImg');
+            const contador = document.getElementById('lightboxContador');
+            if (img) img.src = fotosAtuais[indiceAtual];
+            if (contador) contador.textContent = fotosAtuais.length > 1 ? `${indiceAtual + 1} / ${fotosAtuais.length}` : '';
+            const setaAtiva = fotosAtuais.length > 1;
+            const prev = document.querySelector('.lightbox-prev');
+            const next = document.querySelector('.lightbox-next');
+            if (prev) prev.style.display = setaAtiva ? 'flex' : 'none';
+            if (next) next.style.display = setaAtiva ? 'flex' : 'none';
+        }
+
+        function teclasLightbox(e) {
+            if (e.key === 'Escape') fecharLightbox();
+            if (e.key === 'ArrowLeft') navegarLightbox(-1);
+            if (e.key === 'ArrowRight') navegarLightbox(1);
         }
 
         carregarVeiculo();

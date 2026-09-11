@@ -154,6 +154,13 @@
             font-weight: 700; text-transform: uppercase; letter-spacing: 0.02em;
         }
 
+        .badge-fotos-count {
+            position: absolute; bottom: 10px; right: 10px; background: rgba(0,0,0,0.65);
+            color: white; padding: 3px 7px; border-radius: 4px; font-size: 0.72rem; font-weight: 600;
+        }
+
+        .img-wrapper.sem-foto img { object-fit: contain; padding: 30px; opacity: 0.5; }
+
         .card-body { padding: 12px 14px 14px; display: flex; flex-direction: column; flex: 1; }
         .card-titulo {
             font-size: clamp(0.95rem, 2.4vw, 1.1rem);
@@ -286,6 +293,29 @@
 
         let todosVeiculos = [];
         let debounceTimer = null;
+        const FOTO_PLACEHOLDER = 'https://via.placeholder.com/400x300?text=Sem+Foto';
+
+        // Monta a lista de fotos de um veículo a partir de foto_url + fotos_galeria,
+        // removendo vazios/duplicados. Mesma lógica usada em detalhes.html.
+        function obterFotos(v) {
+            let fotos = [];
+
+            if (v.foto_url && String(v.foto_url).trim()) fotos.push(String(v.foto_url).trim());
+
+            if (v.fotos_galeria) {
+                let galeria = v.fotos_galeria;
+                if (typeof galeria === 'string') {
+                    try { galeria = JSON.parse(galeria); } catch (e) { galeria = []; }
+                }
+                if (Array.isArray(galeria)) {
+                    galeria.forEach(url => {
+                        if (url && String(url).trim()) fotos.push(String(url).trim());
+                    });
+                }
+            }
+
+            return [...new Set(fotos)];
+        }
 
         function renderSkeletons(qtd = 6) {
             const container = document.getElementById("listaVeiculos");
@@ -366,7 +396,8 @@
             const frag = document.createDocumentFragment();
 
             filtrados.forEach(v => {
-                const foto = v.foto_url || 'https://via.placeholder.com/400x300?text=Sem+Foto';
+                const fotos = obterFotos(v);
+                const foto = fotos[0] || FOTO_PLACEHOLDER;
                 const precoFmt = v.preco ? `R$ ${Number(v.preco).toLocaleString('pt-BR')}` : 'Sob Consulta';
                 const kmFmt = v.km ? `${Number(v.km).toLocaleString('pt-BR')} km` : 'KM N/A';
 
@@ -375,9 +406,10 @@
                 card.href = `detalhes.html?id=${v.id}`;
 
                 card.innerHTML = `
-                    <div class="img-wrapper">
-                        <img src="${foto}" alt="${v.marca || ''} ${v.modelo || ''}" loading="lazy">
+                    <div class="img-wrapper${fotos.length === 0 ? ' sem-foto' : ''}">
+                        <img src="${foto}" alt="${v.marca || ''} ${v.modelo || ''}" loading="lazy" onerror="this.onerror=null; this.src='${FOTO_PLACEHOLDER}'; this.parentElement.classList.add('sem-foto');">
                         <span class="badge-status-card">Disponível</span>
+                        ${fotos.length > 1 ? `<span class="badge-fotos-count">📷 ${fotos.length}</span>` : ''}
                     </div>
                     <div class="card-body">
                         <div class="card-titulo">${v.marca || ''} ${v.modelo || ''}</div>
