@@ -3,7 +3,8 @@
 
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <meta name="description" content="Detalhes do veículo - Mazo Automóveis, Braço do Norte - SC.">
     <title>Detalhes do Veículo - Mazo Automóveis</title>
 
     <style>
@@ -21,93 +22,185 @@
 
         * { margin: 0; padding: 0; box-sizing: border-box; }
 
+        html { scroll-behavior: smooth; }
+
         body {
             font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
             background-color: var(--wm-gray-bg);
             color: var(--wm-text-dark);
             display: flex; flex-direction: column; min-height: 100vh;
+            -webkit-text-size-adjust: 100%;
         }
 
+        a { color: inherit; }
+
+        /* ---------- Navbar ---------- */
         .navbar {
-            background-color: var(--wm-dark); color: white; padding: 12px 20px;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.15); margin-bottom: 30px;
+            background-color: var(--wm-dark); color: white; padding: 10px 20px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
             border-bottom: 3px solid var(--wm-red);
+            position: sticky; top: 0; z-index: 30;
         }
 
         .navbar-content { max-width: 1100px; margin: 0 auto; display: flex; align-items: center; justify-content: space-between; }
-        .logo-img { height: 50px; width: auto; object-fit: contain; }
+        .logo-img { height: 44px; width: auto; object-fit: contain; display: block; }
+        .navbar a.logo-link { display: inline-flex; align-items: center; }
 
-        .container { max-width: 1100px; margin: 0 auto 50px; padding: 0 20px; flex: 1; }
+        .navbar-cta {
+            display: inline-flex; align-items: center; gap: 6px;
+            background-color: var(--wm-red); color: white; text-decoration: none;
+            padding: 9px 14px; border-radius: 6px; font-size: 0.85rem; font-weight: 700;
+            transition: background-color 0.15s ease;
+            white-space: nowrap;
+        }
+        .navbar-cta:hover, .navbar-cta:focus-visible { background-color: var(--wm-red-hover); }
+
+        @media (max-width: 480px) {
+            .navbar-cta .cta-label { display: none; }
+            .navbar-cta { padding: 10px; }
+        }
+
+        /* ---------- Layout ---------- */
+        .container { max-width: 1100px; margin: 0 auto; padding: 20px 16px 50px; flex: 1; width: 100%; }
 
         .btn-voltar {
-            display: inline-flex; align-items: center; gap: 6px; margin-bottom: 20px;
-            text-decoration: none; color: var(--wm-text-muted); font-weight: 600; font-size: 0.95rem;
+            display: inline-flex; align-items: center; gap: 6px; margin-bottom: 16px;
+            text-decoration: none; color: var(--wm-text-muted); font-weight: 600; font-size: 0.9rem;
+            padding: 6px 0;
         }
-        .btn-voltar:hover { color: var(--wm-red); }
+        .btn-voltar:hover, .btn-voltar:focus-visible { color: var(--wm-red); }
 
-        .detalhe-grid { display: grid; grid-template-columns: 2fr 1fr; gap: 25px; }
+        .detalhe-grid { display: grid; grid-template-columns: 2fr 1fr; gap: 20px; }
 
         @media (max-width: 850px) { .detalhe-grid { grid-template-columns: 1fr; } }
 
+        /* ---------- Gallery ---------- */
         .galeria-card {
             background-color: var(--wm-card-bg); border-radius: var(--border-radius);
-            overflow: hidden; border: 1px solid var(--wm-border); margin-bottom: 25px;
+            overflow: hidden; border: 1px solid var(--wm-border); margin-bottom: 20px;
         }
 
-        .img-principal-wrapper { position: relative; width: 100%; height: 450px; background-color: #111; }
+        .img-principal-wrapper { position: relative; width: 100%; aspect-ratio: 4 / 3; background-color: #111; }
+        @media (min-width: 850px) { .img-principal-wrapper { aspect-ratio: 16 / 10; } }
         .img-principal { width: 100%; height: 100%; object-fit: contain; display: block; }
 
         .thumbs-grid {
-            display: flex; gap: 10px; padding: 12px; overflow-x: auto;
+            display: flex; gap: 8px; padding: 10px; overflow-x: auto;
             background: #fafafa; border-top: 1px solid var(--wm-border);
+            -webkit-overflow-scrolling: touch; scroll-snap-type: x proximity;
         }
 
         .thumb-item {
-            width: 90px; height: 65px; object-fit: cover; border-radius: 4px;
-            cursor: pointer; opacity: 0.6; border: 2px solid transparent; transition: all 0.2s; flex-shrink: 0;
+            width: 72px; height: 54px; object-fit: cover; border-radius: 4px;
+            cursor: pointer; opacity: 0.6; border: 2px solid transparent; transition: all 0.2s;
+            flex-shrink: 0; scroll-snap-align: start;
         }
 
-        .thumb-item:hover, .thumb-item.active { opacity: 1; border-color: var(--wm-red); }
+        .thumb-item:hover, .thumb-item.active, .thumb-item:focus-visible { opacity: 1; border-color: var(--wm-red); }
+
+        @media (min-width: 480px) {
+            .thumb-item { width: 90px; height: 65px; }
+        }
 
         .box-descricao {
             background-color: var(--wm-card-bg); border-radius: var(--border-radius);
-            padding: 25px; border: 1px solid var(--wm-border); margin-bottom: 25px;
+            padding: 18px 20px; border: 1px solid var(--wm-border); margin-bottom: 20px;
         }
 
         .box-descricao h3 {
-            font-size: 1.2rem; color: var(--wm-text-dark); margin-bottom: 15px;
-            padding-bottom: 10px; border-bottom: 2px solid var(--wm-red); display: inline-block;
+            font-size: 1.1rem; color: var(--wm-text-dark); margin-bottom: 12px;
+            padding-bottom: 8px; border-bottom: 2px solid var(--wm-red); display: inline-block;
         }
 
         .texto-descricao { font-size: 0.95rem; line-height: 1.6; color: #4a4d5e; white-space: pre-line; }
 
+        /* ---------- Sidebar ---------- */
         .sidebar-compra {
             background-color: var(--wm-card-bg); border-radius: var(--border-radius);
-            padding: 25px; border: 1px solid var(--wm-border); height: fit-content; position: sticky; top: 20px;
+            padding: 20px; border: 1px solid var(--wm-border); height: fit-content;
         }
 
-        .titulo-veiculo { font-size: 1.6rem; font-weight: 800; color: var(--wm-text-dark); margin-bottom: 5px; text-transform: uppercase; }
-        .preco-destaque { font-size: 2rem; font-weight: 800; color: var(--wm-red); margin: 15px 0 20px; }
+        @media (min-width: 850px) {
+            .sidebar-compra { position: sticky; top: 84px; }
+        }
 
-        .ficha-tecnica { margin-bottom: 25px; }
-        .ficha-item { display: flex; justify-content: space-between; padding: 10px 0; border-bottom: 1px dashed var(--wm-border); font-size: 0.9rem; }
-        .ficha-item span { color: var(--wm-text-muted); }
+        .titulo-veiculo { font-size: clamp(1.3rem, 4vw, 1.6rem); font-weight: 800; color: var(--wm-text-dark); margin-bottom: 4px; text-transform: uppercase; line-height: 1.25; }
+        .preco-destaque { font-size: clamp(1.5rem, 5vw, 2rem); font-weight: 800; color: var(--wm-red); margin: 12px 0 18px; }
+
+        .ficha-tecnica {
+            margin-bottom: 22px; display: grid; grid-template-columns: 1fr 1fr; gap: 0 16px;
+        }
+        .ficha-item { display: flex; flex-direction: column; gap: 2px; padding: 10px 0; border-bottom: 1px dashed var(--wm-border); font-size: 0.88rem; }
+        .ficha-item span { color: var(--wm-text-muted); font-size: 0.78rem; }
         .ficha-item strong { color: var(--wm-text-dark); }
 
         .btn-whatsapp-wm {
-            display: block; text-align: center; background: #25D366; color: white;
+            display: flex; align-items: center; justify-content: center; gap: 8px;
+            text-align: center; background: #25D366; color: white;
             text-decoration: none; padding: 15px; border-radius: var(--border-radius);
             font-weight: 700; font-size: 1rem; transition: background 0.2s ease;
+            min-height: 48px;
         }
-        .btn-whatsapp-wm:hover { background: #1faa55; }
+        .btn-whatsapp-wm:hover, .btn-whatsapp-wm:focus-visible { background: #1faa55; }
 
-        .mensagem-alerta { text-align: center; color: var(--wm-text-muted); padding: 60px 0; font-size: 1.2rem; background: white; border-radius: var(--border-radius); }
+        .btn-ligar {
+            display: flex; align-items: center; justify-content: center; gap: 8px;
+            text-align: center; background: white; color: var(--wm-text-dark);
+            text-decoration: none; padding: 13px; border-radius: var(--border-radius);
+            font-weight: 700; font-size: 0.95rem; border: 1px solid var(--wm-border);
+            margin-top: 10px; transition: border-color 0.2s ease;
+        }
+        .btn-ligar:hover, .btn-ligar:focus-visible { border-color: var(--wm-red); color: var(--wm-red); }
 
-        .footer { background-color: var(--wm-dark); color: #a0a5b5; padding: 40px 20px 20px; border-top: 3px solid var(--wm-red); }
-        .footer-content { max-width: 1100px; margin: 0 auto; display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 30px; padding-bottom: 30px; border-bottom: 1px solid #2e3040; }
-        .footer-col h3 { color: white; font-size: 1.1rem; margin-bottom: 15px; font-weight: 700; }
-        .footer-col p { font-size: 0.95rem; line-height: 1.6; margin-bottom: 8px; }
-        .footer-bottom { max-width: 1100px; margin: 20px auto 0; text-align: center; font-size: 0.85rem; color: #707585; }
+        /* ---------- States ---------- */
+        .mensagem-alerta {
+            text-align: center; color: var(--wm-text-muted); padding: 60px 20px; font-size: 1.05rem;
+            background: white; border-radius: var(--border-radius); border: 1px solid var(--wm-border);
+        }
+        .mensagem-alerta .emoji { font-size: 2rem; display: block; margin-bottom: 10px; }
+
+        .skel-img { width: 100%; aspect-ratio: 4/3; border-radius: var(--border-radius); }
+        .skel-line { height: 14px; border-radius: 4px; margin-bottom: 10px; }
+        .skel-line.w70 { width: 70%; height: 26px; }
+        .skel-line.w40 { width: 40%; height: 30px; }
+        .skel-line.w100 { width: 100%; }
+        .skel-img, .skel-line {
+            background: linear-gradient(90deg, #eceff3 25%, #f6f8fa 37%, #eceff3 63%);
+            background-size: 400% 100%;
+            animation: skeleton-pulse 1.4s ease infinite;
+        }
+        @keyframes skeleton-pulse {
+            0% { background-position: 100% 50%; }
+            100% { background-position: 0 50%; }
+        }
+        @media (prefers-reduced-motion: reduce) {
+            .skel-img, .skel-line { animation: none; }
+            html { scroll-behavior: auto; }
+        }
+
+        /* ---------- Footer ---------- */
+        .footer { background-color: var(--wm-dark); color: #a0a5b5; padding: 36px 20px 20px; border-top: 3px solid var(--wm-red); margin-top: auto; }
+        .footer-content { max-width: 1100px; margin: 0 auto; display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 28px; padding-bottom: 26px; border-bottom: 1px solid #2e3040; }
+        .footer-col h3 { color: white; font-size: 1.05rem; margin-bottom: 12px; font-weight: 700; }
+        .footer-col p { font-size: 0.92rem; line-height: 1.65; margin-bottom: 6px; }
+        .footer-col a.footer-link {
+            color: #a0a5b5; text-decoration: none; display: inline-flex; align-items: center; gap: 6px;
+            margin-bottom: 6px; transition: color 0.15s ease;
+        }
+        .footer-col a.footer-link:hover, .footer-col a.footer-link:focus-visible { color: white; }
+        .footer-bottom { max-width: 1100px; margin: 18px auto 0; text-align: center; font-size: 0.82rem; color: #707585; }
+
+        /* ---------- Floating WhatsApp (visible while browsing the page) ---------- */
+        .whats-float {
+            position: fixed; right: 16px; bottom: 16px; z-index: 40;
+            width: 54px; height: 54px; border-radius: 50%;
+            background-color: #25D366; color: white;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 1.5rem; text-decoration: none;
+            box-shadow: 0 6px 16px rgba(0,0,0,0.25);
+            transition: background-color 0.15s ease, transform 0.15s ease;
+        }
+        .whats-float:hover, .whats-float:focus-visible { background-color: #1faa55; transform: scale(1.05); }
     </style>
 </head>
 
@@ -115,16 +208,19 @@
 
     <nav class="navbar">
         <div class="navbar-content">
-            <a href="index.html">
+            <a href="index.html" class="logo-link" aria-label="Mazo Automóveis - Início">
                 <img src="https://jzpshjdwspuslzkhljuz.supabase.co/storage/v1/object/public/fotos-veiculos/carros/logo_fundo_preto.png" alt="Mazo Automóveis" class="logo-img">
+            </a>
+            <a href="https://wa.me/554899872525" class="navbar-cta" target="_blank" rel="noopener">
+                <span aria-hidden="true">💬</span><span class="cta-label">WhatsApp</span>
             </a>
         </div>
     </nav>
 
     <div class="container">
         <a href="index.html" class="btn-voltar">← Voltar para o estoque</a>
-        <main id="conteudoVeiculo">
-            <div class="mensagem-alerta">Carregando detalhes do veículo...</div>
+        <main id="conteudoVeiculo" aria-live="polite">
+            <!-- skeleton inserted by JS -->
         </main>
     </div>
 
@@ -141,12 +237,15 @@
             </div>
             <div class="footer-col">
                 <h3>Atendimento</h3>
-                <p>📞 (48) 99987-2525</p>
-                <p>💬 Atendimento via WhatsApp de Segunda a Sábado</p>
+                <a class="footer-link" href="tel:+5548999872525">📞 (48) 99987-2525</a>
+                <a class="footer-link" href="https://wa.me/554899872525" target="_blank" rel="noopener">💬 Fale conosco pelo WhatsApp</a>
+                <p>Atendimento de Segunda a Sábado</p>
             </div>
         </div>
         <div class="footer-bottom">&copy; Mazo Automóveis - Todos os direitos reservados.</div>
     </footer>
+
+    <a href="https://wa.me/554899872525" class="whats-float" target="_blank" rel="noopener" aria-label="Falar no WhatsApp">💬</a>
 
     <script>
         const SUPABASE_URL = "https://jzpshjdwspuslzkhljuz.supabase.co";
@@ -156,13 +255,38 @@
         const parametros = new URLSearchParams(window.location.search);
         const id = parametros.get("id");
 
+        function renderSkeleton() {
+            const container = document.getElementById("conteudoVeiculo");
+            container.innerHTML = `
+                <div class="detalhe-grid">
+                    <div>
+                        <div class="galeria-card">
+                            <div class="skel-img"></div>
+                        </div>
+                        <div class="box-descricao">
+                            <div class="skel-line w40"></div>
+                            <div class="skel-line w100"></div>
+                            <div class="skel-line w100"></div>
+                        </div>
+                    </div>
+                    <div>
+                        <div class="sidebar-compra">
+                            <div class="skel-line w70"></div>
+                            <div class="skel-line w40"></div>
+                        </div>
+                    </div>
+                </div>`;
+        }
+
         async function carregarVeiculo() {
             const container = document.getElementById("conteudoVeiculo");
 
             if (!id) {
-                container.innerHTML = `<div class="mensagem-alerta">Veículo não encontrado.</div>`;
+                container.innerHTML = `<div class="mensagem-alerta"><span class="emoji" aria-hidden="true">🚗</span>Veículo não encontrado.</div>`;
                 return;
             }
+
+            renderSkeleton();
 
             try {
                 const resposta = await fetch(`${SUPABASE_URL}/rest/v1/veiculos?id=eq.${id}&select=*`, {
@@ -173,7 +297,7 @@
                 const dados = await resposta.json();
 
                 if (!dados || dados.length === 0) {
-                    container.innerHTML = `<div class="mensagem-alerta">Veículo não encontrado.</div>`;
+                    container.innerHTML = `<div class="mensagem-alerta"><span class="emoji" aria-hidden="true">🚗</span>Veículo não encontrado.</div>`;
                     return;
                 }
 
@@ -204,15 +328,17 @@
 
                 let htmlThumbs = '';
                 listaFotos.forEach((imgUrl, idx) => {
-                    htmlThumbs += `<img class="thumb-item ${idx === 0 ? 'active' : ''}" src="${imgUrl}" onclick="trocarFoto('${imgUrl}', this)">`;
+                    htmlThumbs += `<img class="thumb-item ${idx === 0 ? 'active' : ''}" src="${imgUrl}" alt="Foto ${idx + 1} de ${v.marca || ''} ${v.modelo || ''}" tabindex="0" onclick="trocarFoto('${imgUrl}', this)" onkeypress="if(event.key==='Enter') trocarFoto('${imgUrl}', this)">`;
                 });
+
+                document.title = `${v.marca || ''} ${v.modelo || ''} - Mazo Automóveis`;
 
                 container.innerHTML = `
                     <div class="detalhe-grid">
                         <div>
                             <div class="galeria-card">
                                 <div class="img-principal-wrapper">
-                                    <img id="imgDestaque" class="img-principal" src="${fotoCapa}" alt="${v.marca} ${v.modelo}">
+                                    <img id="imgDestaque" class="img-principal" src="${fotoCapa}" alt="${v.marca || ''} ${v.modelo || ''}">
                                 </div>
                                 ${listaFotos.length > 1 ? `<div class="thumbs-grid">${htmlThumbs}</div>` : ''}
                             </div>
@@ -237,7 +363,10 @@
                                 </div>
 
                                 <a class="btn-whatsapp-wm" target="_blank" rel="noopener noreferrer" href="https://wa.me/${TELEFONE_WHATSAPP}?text=${mensagemWhatsApp}">
-                                    Enviar Mensagem via WhatsApp
+                                    💬 Enviar Mensagem via WhatsApp
+                                </a>
+                                <a class="btn-ligar" href="tel:+${TELEFONE_WHATSAPP}">
+                                    📞 Ligar agora
                                 </a>
                             </div>
                         </div>
@@ -246,7 +375,7 @@
 
             } catch (erro) {
                 console.error(erro);
-                container.innerHTML = `<div class="mensagem-alerta">Erro ao carregar detalhes do veículo.</div>`;
+                container.innerHTML = `<div class="mensagem-alerta"><span class="emoji" aria-hidden="true">⚠️</span>Erro ao carregar detalhes do veículo.</div>`;
             }
         }
 
