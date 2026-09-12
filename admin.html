@@ -31,17 +31,18 @@
         button, input, select, textarea { font-family: inherit; }
 
         .navbar {
-            background-color: var(--wm-dark);
+            background: linear-gradient(180deg, #161616 0%, var(--wm-dark) 100%);
             color: white;
-            padding: 10px 16px;
+            padding: 12px 18px;
             display: flex;
             justify-content: space-between;
             align-items: center;
+            box-shadow: 0 4px 14px rgba(0,0,0,0.18);
             border-bottom: 3px solid var(--wm-red);
             position: sticky; top: 0; z-index: 30;
         }
 
-        .logo-img { height: 40px; width: auto; object-fit: contain; }
+        .logo-img { height: 42px; width: auto; object-fit: contain; }
 
         .btn-logout {
             background: #333; color: white; border: none; padding: 10px 14px;
@@ -72,15 +73,18 @@
         }
 
         .form-control:focus { border-color: var(--wm-red); }
-        textarea.form-control { min-height: auto; }
+        textarea.form-control { min-height: 160px; resize: vertical; line-height: 1.5; }
+
+        .icon { display: inline-block; flex-shrink: 0; }
 
         .campo-senha-wrapper { position: relative; }
         .campo-senha-wrapper .form-control { padding-right: 44px; }
         .btn-mostrar-senha {
             position: absolute; right: 4px; top: 4px; bottom: 4px; width: 40px;
-            border: none; background: transparent; cursor: pointer; font-size: 1.1rem;
+            border: none; background: transparent; cursor: pointer;
             color: var(--wm-text-muted); display: flex; align-items: center; justify-content: center;
         }
+        .btn-mostrar-senha .icon { width: 19px; height: 19px; }
 
         .erro-login {
             background: #feefe3; color: #b06000; padding: 10px 12px; border-radius: 6px;
@@ -262,7 +266,7 @@
                     <label for="loginSenha">Senha</label>
                     <div class="campo-senha-wrapper">
                         <input type="password" id="loginSenha" class="form-control" required placeholder="******" autocomplete="current-password">
-                        <button type="button" class="btn-mostrar-senha" onclick="alternarSenha()" aria-label="Mostrar senha" id="btnMostrarSenha">👁️</button>
+                        <button type="button" class="btn-mostrar-senha" onclick="alternarSenha()" aria-label="Mostrar senha" id="btnMostrarSenha"><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg></button>
                     </div>
                 </div>
                 <button type="submit" id="btnEntrar" class="btn-primary" style="width: 100%;">Entrar no Painel</button>
@@ -366,7 +370,7 @@
 
                     <div class="form-group col-span-2">
                         <label for="descricao">Descrição Detalhada</label>
-                        <textarea id="descricao" class="form-control" rows="3" placeholder="Informações adicionais do carro..."></textarea>
+                        <textarea id="descricao" class="form-control" rows="7" placeholder="Informações adicionais do carro..."></textarea>
                     </div>
                 </div>
                 <button type="submit" id="btnSalvar" class="btn-primary" style="margin-top: 15px; width: 100%;">Salvar Veículo</button>
@@ -439,7 +443,7 @@
                     </div>
                     <div class="form-group col-span-2">
                         <label for="editDescricao">Descrição Detalhada</label>
-                        <textarea id="editDescricao" class="form-control" rows="3"></textarea>
+                        <textarea id="editDescricao" class="form-control" rows="7"></textarea>
                     </div>
                 </div>
                 <button type="submit" id="btnSalvarEdicao" class="btn-primary" style="margin-top: 15px; width: 100%;">Atualizar Informações</button>
@@ -482,12 +486,15 @@
             if (session) exibirPainel();
         });
 
+        const ICONE_OLHO = '<svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>';
+        const ICONE_OLHO_FECHADO = '<svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M17.94 17.94A10.94 10.94 0 0 1 12 20c-7 0-11-8-11-8a20.29 20.29 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a20.14 20.14 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"/><line x1="1" y1="1" x2="23" y2="23"/></svg>';
+
         window.alternarSenha = function() {
             const campo = document.getElementById('loginSenha');
             const btn = document.getElementById('btnMostrarSenha');
             const visivel = campo.type === 'text';
             campo.type = visivel ? 'password' : 'text';
-            btn.textContent = visivel ? '👁️' : '🙈';
+            btn.innerHTML = visivel ? ICONE_OLHO : ICONE_OLHO_FECHADO;
         }
 
         document.getElementById('formLogin').addEventListener('submit', async (e) => {

@@ -34,36 +34,44 @@
 
         a { color: inherit; }
 
+        /* ---------- Icons ---------- */
+        .icon { display: inline-block; flex-shrink: 0; }
+
         /* ---------- Navbar ---------- */
         .navbar {
-            background-color: var(--wm-dark); color: white;
-            padding: 10px 20px;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+            background: linear-gradient(180deg, #161616 0%, var(--wm-dark) 100%);
+            color: white;
+            padding: 14px 20px;
+            box-shadow: 0 4px 14px rgba(0,0,0,0.18);
             border-bottom: 3px solid var(--wm-red);
             position: sticky; top: 0; z-index: 30;
         }
 
         .navbar-content {
             max-width: 1200px; margin: 0 auto;
-            display: flex; align-items: center; justify-content: space-between;
+            display: flex; align-items: center; justify-content: space-between; gap: 16px;
         }
 
-        .logo-img { height: 44px; width: auto; object-fit: contain; display: block; }
+        .logo-img { height: 46px; width: auto; object-fit: contain; display: block; }
 
         .navbar a.logo-link { display: inline-flex; align-items: center; }
 
-        .navbar-cta {
-            display: inline-flex; align-items: center; gap: 6px;
-            background-color: var(--wm-red); color: white; text-decoration: none;
-            padding: 9px 14px; border-radius: 6px; font-size: 0.85rem; font-weight: 700;
-            transition: background-color 0.15s ease;
+        .navbar-phone {
+            display: inline-flex; align-items: center; gap: 8px;
+            color: white; text-decoration: none;
+            padding: 9px 16px; border-radius: 999px; font-size: 0.88rem; font-weight: 700;
+            border: 1px solid rgba(255,255,255,0.22);
+            transition: background-color 0.15s ease, border-color 0.15s ease;
             white-space: nowrap;
         }
-        .navbar-cta:hover, .navbar-cta:focus-visible { background-color: var(--wm-red-hover); }
+        .navbar-phone .icon { color: var(--wm-red); }
+        .navbar-phone:hover, .navbar-phone:focus-visible {
+            background-color: rgba(255,255,255,0.08); border-color: var(--wm-red);
+        }
 
         @media (max-width: 480px) {
-            .navbar-cta .cta-label { display: none; }
-            .navbar-cta { padding: 10px; }
+            .navbar-phone .phone-label { display: none; }
+            .navbar-phone { padding: 10px; border-radius: 50%; }
         }
 
         /* ---------- Layout ---------- */
@@ -88,8 +96,10 @@
 
         .campo-busca-wrapper { position: relative; display: flex; align-items: center; }
         .campo-busca-wrapper .icone-busca {
-            position: absolute; left: 14px; font-size: 1rem; opacity: 0.5; pointer-events: none;
+            position: absolute; left: 14px; opacity: 0.5; pointer-events: none;
+            display: flex; align-items: center;
         }
+        .campo-busca-wrapper .icone-busca .icon { width: 18px; height: 18px; }
         .campo-busca-wrapper .form-control { padding-left: 38px; }
 
         .form-control {
@@ -157,6 +167,7 @@
         .badge-fotos-count {
             position: absolute; bottom: 10px; right: 10px; background: rgba(0,0,0,0.65);
             color: white; padding: 3px 7px; border-radius: 4px; font-size: 0.72rem; font-weight: 600;
+            display: inline-flex; align-items: center; gap: 4px;
         }
 
         .img-wrapper.sem-foto img { object-fit: contain; padding: 30px; opacity: 0.5; }
@@ -176,7 +187,7 @@
             font-size: 1.05rem; background: white; border-radius: var(--border-radius); grid-column: 1 / -1;
             border: 1px solid var(--wm-border);
         }
-        .mensagem-alerta .emoji { font-size: 2rem; display: block; margin-bottom: 10px; }
+        .mensagem-alerta .icon-alerta { display: block; margin: 0 auto 10px; color: var(--wm-text-muted); opacity: 0.6; }
 
         .card-skeleton {
             background: white; border-radius: var(--border-radius); border: 1px solid var(--wm-border);
@@ -205,6 +216,7 @@
         /* ---------- Footer ---------- */
         .footer { background-color: var(--wm-dark); color: #a0a5b5; padding: 36px 20px 20px; border-top: 3px solid var(--wm-red); margin-top: auto; }
         .footer-content { max-width: 1200px; margin: 0 auto; display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 28px; padding-bottom: 26px; border-bottom: 1px solid #2e3040; }
+        .footer-logo { height: 34px; width: auto; object-fit: contain; margin-bottom: 12px; display: block; }
         .footer-col h3 { color: white; font-size: 1.05rem; margin-bottom: 12px; font-weight: 700; }
         .footer-col p { font-size: 0.92rem; line-height: 1.65; margin-bottom: 6px; }
         .footer-col a.footer-link {
@@ -212,19 +224,23 @@
             margin-bottom: 6px; transition: color 0.15s ease;
         }
         .footer-col a.footer-link:hover, .footer-col a.footer-link:focus-visible { color: white; }
+        .footer-col .icon { width: 15px; height: 15px; opacity: 0.85; }
+        .footer-line { display: flex; align-items: flex-start; gap: 8px; }
+        .footer-line .icon { margin-top: 3px; }
         .footer-bottom { max-width: 1200px; margin: 18px auto 0; text-align: center; font-size: 0.82rem; color: #707585; }
 
         /* ---------- Floating WhatsApp button (mobile-friendly quick contact) ---------- */
         .whats-float {
             position: fixed; right: 16px; bottom: 16px; z-index: 40;
-            width: 54px; height: 54px; border-radius: 50%;
-            background-color: var(--wm-red); color: white;
+            width: 56px; height: 56px; border-radius: 50%;
+            background-color: #25D366; color: white;
             display: flex; align-items: center; justify-content: center;
-            font-size: 1.5rem; text-decoration: none;
+            text-decoration: none;
             box-shadow: 0 6px 16px rgba(0,0,0,0.25);
             transition: background-color 0.15s ease, transform 0.15s ease;
         }
-        .whats-float:hover, .whats-float:focus-visible { background-color: var(--wm-red-hover); transform: scale(1.05); }
+        .whats-float .icon { width: 28px; height: 28px; }
+        .whats-float:hover, .whats-float:focus-visible { background-color: #1faa55; transform: scale(1.05); }
     </style>
 </head>
 
@@ -235,8 +251,9 @@
             <a href="index.html" class="logo-link" aria-label="Mazo Automóveis - Início">
                 <img src="https://jzpshjdwspuslzkhljuz.supabase.co/storage/v1/object/public/fotos-veiculos/carros/logo_fundo_preto.png" alt="Mazo Automóveis" class="logo-img">
             </a>
-            <a href="https://wa.me/554899872525" class="navbar-cta" target="_blank" rel="noopener">
-                <span aria-hidden="true">💬</span><span class="cta-label">WhatsApp</span>
+            <a href="tel:+5548999872525" class="navbar-phone" aria-label="Ligar para (48) 99987-2525">
+                <svg class="icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
+                <span class="phone-label">(48) 99987-2525</span>
             </a>
         </div>
     </nav>
@@ -249,7 +266,7 @@
 
         <div class="busca-card">
             <div class="campo-busca-wrapper">
-                <span class="icone-busca" aria-hidden="true">🔎</span>
+                <span class="icone-busca" aria-hidden="true"><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg></span>
                 <input type="text" id="inputBusca" class="form-control" placeholder="Buscar por modelo ou palavra-chave..." inputmode="search" oninput="filtrarVeiculos()" aria-label="Buscar veículo">
             </div>
             <select id="selectMarca" class="form-control" onchange="filtrarVeiculos()" aria-label="Filtrar por marca">
@@ -267,25 +284,25 @@
     <footer class="footer">
         <div class="footer-content">
             <div class="footer-col">
-                <h3>MAZO AUTOMÓVEIS</h3>
+                <img src="https://jzpshjdwspuslzkhljuz.supabase.co/storage/v1/object/public/fotos-veiculos/carros/logo_fundo_preto.png" alt="Mazo Automóveis" class="footer-logo">
                 <p>Sua melhor opção em veículos seminovos com garantia e procedência.</p>
             </div>
             <div class="footer-col">
                 <h3>Localização</h3>
-                <p>📍 SC-370, 2470 - Rio Bonito</p>
-                <p>Braço do Norte - SC</p>
+                <p class="footer-line"><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg><span>SC-370, 2470 - Rio Bonito<br>Braço do Norte - SC</span></p>
             </div>
             <div class="footer-col">
                 <h3>Atendimento</h3>
-                <a class="footer-link" href="tel:+5548999872525">📞 (48) 99987-2525</a>
-                <a class="footer-link" href="https://wa.me/554899872525" target="_blank" rel="noopener">💬 Fale conosco pelo WhatsApp</a>
-                <p>Atendimento de Segunda a Sábado</p>
+                <a class="footer-link" href="tel:+5548999872525"><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 16.92z"/></svg>(48) 99987-2525</a>
+                <a class="footer-link" href="tel:+5548999764709"><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 16.92z"/></svg>Eder: (48) 99976-4709</a>
+                <a class="footer-link" href="https://wa.me/554899872525?text=Ol%C3%A1%21%20Vi%20o%20site%20da%20Mazo%20Autom%C3%B3veis%20e%20gostaria%20de%20mais%20informa%C3%A7%C3%B5es%20sobre%20os%20ve%C3%ADculos%20dispon%C3%ADveis." target="_blank" rel="noopener"><svg class="icon" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.626.712.226 1.36.194 1.872.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347z"/><path d="M12.031 2.001C6.508 2.001 2.001 6.508 2.001 12.031c0 1.892.528 3.741 1.53 5.35L2 22l4.746-1.507a10.01 10.01 0 0 0 5.285 1.522h.004c5.523 0 10.03-4.507 10.03-10.03A9.965 9.965 0 0 0 19.03 4.97a9.965 9.965 0 0 0-6.999-2.969zm5.965 15.994a8.31 8.31 0 0 1-4.977 1.581h-.003a8.29 8.29 0 0 1-4.235-1.16l-.304-.181-3.146 1.001 1.017-3.045-.198-.313a8.256 8.256 0 0 1-1.264-4.393c0-4.59 3.735-8.325 8.328-8.325a8.256 8.256 0 0 1 5.888 2.442 8.256 8.256 0 0 1 2.436 5.887c0 4.593-3.735 8.328-8.328 8.328z"/></svg>Fale conosco pelo WhatsApp</a>
+                <p style="margin-top: 6px;">Atendimento de Segunda a Sábado</p>
             </div>
         </div>
-        <div class="footer-bottom">&copy; Mazo Automóveis - Todos os direitos reservados.</div>
+        <div class="footer-bottom">&copy; <span id="anoAtual"></span> Mazo Automóveis - Todos os direitos reservados.</div>
     </footer>
 
-    <a href="https://wa.me/554899872525" class="whats-float" target="_blank" rel="noopener" aria-label="Falar no WhatsApp">💬</a>
+    <a href="https://wa.me/554899872525?text=Ol%C3%A1%21%20Vi%20o%20site%20da%20Mazo%20Autom%C3%B3veis%20e%20gostaria%20de%20mais%20informa%C3%A7%C3%B5es%20sobre%20os%20ve%C3%ADculos%20dispon%C3%ADveis." class="whats-float" target="_blank" rel="noopener" aria-label="Falar no WhatsApp"><svg class="icon" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.626.712.226 1.36.194 1.872.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347z"/><path d="M12.031 2.001C6.508 2.001 2.001 6.508 2.001 12.031c0 1.892.528 3.741 1.53 5.35L2 22l4.746-1.507a10.01 10.01 0 0 0 5.285 1.522h.004c5.523 0 10.03-4.507 10.03-10.03A9.965 9.965 0 0 0 19.03 4.97a9.965 9.965 0 0 0-6.999-2.969zm5.965 15.994a8.31 8.31 0 0 1-4.977 1.581h-.003a8.29 8.29 0 0 1-4.235-1.16l-.304-.181-3.146 1.001 1.017-3.045-.198-.313a8.256 8.256 0 0 1-1.264-4.393c0-4.59 3.735-8.325 8.328-8.325a8.256 8.256 0 0 1 5.888 2.442 8.256 8.256 0 0 1 2.436 5.887c0 4.593-3.735 8.328-8.328 8.328z"/></svg></a>
 
     <script>
         const SUPABASE_URL = "https://jzpshjdwspuslzkhljuz.supabase.co";
@@ -351,7 +368,7 @@
 
             } catch (erro) {
                 console.error(erro);
-                container.innerHTML = `<div class="mensagem-alerta"><span class="emoji" aria-hidden="true">⚠️</span>Erro ao carregar o estoque. Tente novamente mais tarde.</div>`;
+                container.innerHTML = `<div class="mensagem-alerta"><svg class="icon-alerta" width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10.29 3.86 1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>Erro ao carregar o estoque. Tente novamente mais tarde.</div>`;
                 document.getElementById("resultadoContagem").hidden = true;
             }
         }
@@ -388,7 +405,7 @@
             contagem.innerHTML = `<strong>${filtrados.length}</strong> veículo${filtrados.length === 1 ? '' : 's'} encontrado${filtrados.length === 1 ? '' : 's'}`;
 
             if (filtrados.length === 0) {
-                container.innerHTML = `<div class="mensagem-alerta"><span class="emoji" aria-hidden="true">🔍</span>Nenhum veículo encontrado. Tente outra busca ou marca.</div>`;
+                container.innerHTML = `<div class="mensagem-alerta"><svg class="icon-alerta" width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>Nenhum veículo encontrado. Tente outra busca ou marca.</div>`;
                 return;
             }
 
@@ -409,7 +426,7 @@
                     <div class="img-wrapper${fotos.length === 0 ? ' sem-foto' : ''}">
                         <img src="${foto}" alt="${v.marca || ''} ${v.modelo || ''}" loading="lazy" onerror="this.onerror=null; this.src='${FOTO_PLACEHOLDER}'; this.parentElement.classList.add('sem-foto');">
                         <span class="badge-status-card">Disponível</span>
-                        ${fotos.length > 1 ? `<span class="badge-fotos-count">📷 ${fotos.length}</span>` : ''}
+                        ${fotos.length > 1 ? `<span class="badge-fotos-count"><svg class="icon" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/><circle cx="12" cy="13" r="4"/></svg> ${fotos.length}</span>` : ''}
                     </div>
                     <div class="card-body">
                         <div class="card-titulo">${v.marca || ''} ${v.modelo || ''}</div>
@@ -426,6 +443,7 @@
             container.appendChild(frag);
         }
 
+        document.getElementById('anoAtual').textContent = new Date().getFullYear();
         carregarEstoque();
     </script>
 </body>
