@@ -78,19 +78,39 @@
         }
         .btn-voltar:hover, .btn-voltar:focus-visible { color: var(--wm-red); }
 
-        .detalhe-grid { display: grid; grid-template-columns: 2fr 1fr; gap: 20px; }
+        .detalhe-grid {
+            display: grid;
+            grid-template-columns: 2fr 1fr;
+            grid-template-areas:
+                "galeria sidebar"
+                "descricao sidebar";
+            gap: 20px;
+            align-items: start;
+        }
 
-        @media (max-width: 850px) { .detalhe-grid { grid-template-columns: 1fr; } }
+        @media (max-width: 850px) {
+            .detalhe-grid {
+                grid-template-columns: 1fr;
+                grid-template-areas:
+                    "galeria"
+                    "sidebar"
+                    "descricao";
+                gap: 16px;
+            }
+        }
 
         /* ---------- Gallery ---------- */
         .galeria-card {
+            grid-area: galeria;
             background-color: var(--wm-card-bg); border-radius: var(--border-radius);
-            overflow: hidden; border: 1px solid var(--wm-border); margin-bottom: 20px;
+            overflow: hidden; border: 1px solid var(--wm-border);
         }
 
-        .img-principal-wrapper { position: relative; width: 100%; aspect-ratio: 4 / 3; background-color: #111; }
-        @media (min-width: 850px) { .img-principal-wrapper { aspect-ratio: 16 / 10; } }
-        .img-principal { width: 100%; height: 100%; object-fit: contain; display: block; }
+        .img-principal-wrapper { position: relative; width: 100%; aspect-ratio: 4 / 3; background-color: #e5e7eb; }
+        .img-principal { width: 100%; height: 100%; object-fit: cover; display: block; }
+
+        .img-principal-wrapper.sem-foto { background-color: var(--wm-gray-bg); }
+        .img-principal-wrapper.sem-foto .img-principal { object-fit: contain; padding: 40px; opacity: 0.5; }
 
         .badge-fotos-count {
             position: absolute; bottom: 10px; right: 10px; background: rgba(0,0,0,0.65);
@@ -148,8 +168,9 @@
         }
 
         .box-descricao {
+            grid-area: descricao;
             background-color: var(--wm-card-bg); border-radius: var(--border-radius);
-            padding: 18px 20px; border: 1px solid var(--wm-border); margin-bottom: 20px;
+            padding: 18px 20px; border: 1px solid var(--wm-border);
         }
 
         .box-descricao h3 {
@@ -157,12 +178,27 @@
             padding-bottom: 8px; border-bottom: 2px solid var(--wm-red); display: inline-block;
         }
 
-        .texto-descricao { font-size: 0.95rem; line-height: 1.6; color: #4a4d5e; white-space: pre-line; }
+        .texto-descricao { font-size: 0.95rem; line-height: 1.6; color: #4a4d5e; white-space: pre-line; position: relative; }
+        .texto-descricao.truncado { max-height: 8.6em; overflow: hidden; }
+        .texto-descricao.truncado::after {
+            content: ''; position: absolute; left: 0; right: 0; bottom: 0; height: 44px;
+            background: linear-gradient(180deg, rgba(255,255,255,0) 0%, #fff 85%);
+        }
+
+        .btn-ler-mais {
+            display: inline-flex; align-items: center; gap: 5px; margin-top: 12px;
+            background: none; border: none; color: var(--wm-red); font-weight: 700;
+            font-size: 0.9rem; cursor: pointer; padding: 4px 0; font-family: inherit;
+        }
+        .btn-ler-mais svg { transition: transform 0.2s ease; }
+        .btn-ler-mais:hover, .btn-ler-mais:focus-visible { text-decoration: underline; }
+        .btn-ler-mais.aberto svg { transform: rotate(180deg); }
 
         /* ---------- Sidebar ---------- */
         .sidebar-compra {
+            grid-area: sidebar;
             background-color: var(--wm-card-bg); border-radius: var(--border-radius);
-            padding: 20px; border: 1px solid var(--wm-border); height: fit-content;
+            padding: 20px; border: 1px solid var(--wm-border);
         }
 
         @media (min-width: 850px) {
@@ -173,11 +209,14 @@
         .preco-destaque { font-size: clamp(1.5rem, 5vw, 2rem); font-weight: 800; color: var(--wm-red); margin: 12px 0 18px; }
 
         .ficha-tecnica {
-            margin-bottom: 22px; display: grid; grid-template-columns: 1fr 1fr; gap: 0 16px;
+            margin-bottom: 20px; display: grid; grid-template-columns: 1fr 1fr; gap: 0 16px;
         }
-        .ficha-item { display: flex; flex-direction: column; gap: 2px; padding: 10px 0; border-bottom: 1px dashed var(--wm-border); font-size: 0.88rem; }
-        .ficha-item span { color: var(--wm-text-muted); font-size: 0.78rem; }
+        .ficha-item { display: flex; flex-direction: column; gap: 3px; padding: 10px 0; border-bottom: 1px dashed var(--wm-border); font-size: 0.88rem; }
+        .ficha-item span { display: flex; align-items: center; gap: 5px; color: var(--wm-text-muted); font-size: 0.78rem; }
+        .ficha-item span .icon { width: 13px; height: 13px; opacity: 0.8; }
         .ficha-item strong { color: var(--wm-text-dark); }
+
+        .area-contato { margin-top: 4px; padding-top: 18px; border-top: 1px solid var(--wm-border); }
 
         .btn-whatsapp-wm {
             display: flex; align-items: center; justify-content: center; gap: 8px;
@@ -336,21 +375,17 @@
             const container = document.getElementById("conteudoVeiculo");
             container.innerHTML = `
                 <div class="detalhe-grid">
-                    <div>
-                        <div class="galeria-card">
-                            <div class="skel-img"></div>
-                        </div>
-                        <div class="box-descricao">
-                            <div class="skel-line w40"></div>
-                            <div class="skel-line w100"></div>
-                            <div class="skel-line w100"></div>
-                        </div>
+                    <div class="galeria-card">
+                        <div class="skel-img"></div>
                     </div>
-                    <div>
-                        <div class="sidebar-compra">
-                            <div class="skel-line w70"></div>
-                            <div class="skel-line w40"></div>
-                        </div>
+                    <div class="sidebar-compra">
+                        <div class="skel-line w70"></div>
+                        <div class="skel-line w40"></div>
+                    </div>
+                    <div class="box-descricao">
+                        <div class="skel-line w40"></div>
+                        <div class="skel-line w100"></div>
+                        <div class="skel-line w100"></div>
                     </div>
                 </div>`;
         }
@@ -401,34 +436,27 @@
 
                 container.innerHTML = `
                     <div class="detalhe-grid">
-                        <div>
-                            <div class="galeria-card">
-                                <div class="img-principal-wrapper">
-                                    <img id="imgDestaque" class="img-principal" src="${fotoCapa}" alt="${v.marca || ''} ${v.modelo || ''}" onerror="this.onerror=null; this.src='${FOTO_PLACEHOLDER}';" onclick="abrirLightbox()" style="${listaFotos.length ? 'cursor: zoom-in;' : ''}">
-                                    ${listaFotos.length > 1 ? `<span class="badge-fotos-count" id="contadorFotos">1 / ${listaFotos.length}</span>` : ''}
-                                </div>
-                                ${listaFotos.length > 1 ? `<div class="thumbs-grid">${htmlThumbs}</div>` : ''}
+                        <div class="galeria-card">
+                            <div class="img-principal-wrapper${listaFotos.length === 0 ? ' sem-foto' : ''}">
+                                <img id="imgDestaque" class="img-principal" src="${fotoCapa}" alt="${v.marca || ''} ${v.modelo || ''}" onerror="this.onerror=null; this.src='${FOTO_PLACEHOLDER}'; this.parentElement.classList.add('sem-foto');" onclick="abrirLightbox()" style="${listaFotos.length ? 'cursor: zoom-in;' : ''}">
+                                ${listaFotos.length > 1 ? `<span class="badge-fotos-count" id="contadorFotos">1 / ${listaFotos.length}</span>` : ''}
                             </div>
-
-                            <div class="box-descricao">
-                                <h3>Descrição do Veículo</h3>
-                                <div class="texto-descricao">${v.descricao || 'Nenhuma descrição detalhada informada.'}</div>
-                            </div>
+                            ${listaFotos.length > 1 ? `<div class="thumbs-grid">${htmlThumbs}</div>` : ''}
                         </div>
 
-                        <div>
-                            <div class="sidebar-compra">
-                                <h1 class="titulo-veiculo">${v.marca || ''} ${v.modelo || ''}</h1>
-                                <div class="preco-destaque">${precoFormatado}</div>
+                        <div class="sidebar-compra">
+                            <h1 class="titulo-veiculo">${v.marca || ''} ${v.modelo || ''}</h1>
+                            <div class="preco-destaque">${precoFormatado}</div>
 
-                                <div class="ficha-tecnica">
-                                    <div class="ficha-item"><span>Ano</span><strong>${v.ano || 'Não informado'}</strong></div>
-                                    <div class="ficha-item"><span>Cor</span><strong>${v.cor || 'Não informada'}</strong></div>
-                                    <div class="ficha-item"><span>KM</span><strong>${kmFormatado}</strong></div>
-                                    <div class="ficha-item"><span>Câmbio</span><strong>${v.cambio || 'Não informado'}</strong></div>
-                                    <div class="ficha-item"><span>Combustível</span><strong>${v.combustivel || 'Não informado'}</strong></div>
-                                </div>
+                            <div class="ficha-tecnica">
+                                <div class="ficha-item"><span><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>Ano</span><strong>${v.ano || 'Não informado'}</strong></div>
+                                <div class="ficha-item"><span><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 2.69l5.66 5.66a8 8 0 1 1-11.31 0z"/></svg>Cor</span><strong>${v.cor || 'Não informada'}</strong></div>
+                                <div class="ficha-item"><span><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4.5 19a9 9 0 1 1 15 0"/><line x1="12" y1="13" x2="15" y2="9"/><circle cx="12" cy="13" r="1" fill="currentColor" stroke="none"/></svg>KM</span><strong>${kmFormatado}</strong></div>
+                                <div class="ficha-item"><span><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>Câmbio</span><strong>${v.cambio || 'Não informado'}</strong></div>
+                                <div class="ficha-item"><span><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="3" y1="22" x2="15" y2="22"/><line x1="4" y1="9" x2="14" y2="9"/><path d="M14 22V4a2 2 0 0 0-2-2H6a2 2 0 0 0-2 2v18"/><path d="M14 13h2a2 2 0 0 1 2 2v2a2 2 0 0 0 2 2 2 2 0 0 0 2-2V9.83a2 2 0 0 0-.59-1.42L18 5"/></svg>Combustível</span><strong>${v.combustivel || 'Não informado'}</strong></div>
+                            </div>
 
+                            <div class="area-contato">
                                 <a class="btn-whatsapp-wm" target="_blank" rel="noopener noreferrer" href="https://wa.me/${TELEFONE_WHATSAPP}?text=${mensagemWhatsApp}">
                                     <svg class="icon" width="18" height="18" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.626.712.226 1.36.194 1.872.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347z"/><path d="M12.031 2.001C6.508 2.001 2.001 6.508 2.001 12.031c0 1.892.528 3.741 1.53 5.35L2 22l4.746-1.507a10.01 10.01 0 0 0 5.285 1.522h.004c5.523 0 10.03-4.507 10.03-10.03A9.965 9.965 0 0 0 19.03 4.97a9.965 9.965 0 0 0-6.999-2.969zm5.965 15.994a8.31 8.31 0 0 1-4.977 1.581h-.003a8.29 8.29 0 0 1-4.235-1.16l-.304-.181-3.146 1.001 1.017-3.045-.198-.313a8.256 8.256 0 0 1-1.264-4.393c0-4.59 3.735-8.325 8.328-8.325a8.256 8.256 0 0 1 5.888 2.442 8.256 8.256 0 0 1 2.436 5.887c0 4.593-3.735 8.328-8.328 8.328z"/></svg>
                                     Enviar Mensagem via WhatsApp
@@ -439,13 +467,46 @@
                                 </a>
                             </div>
                         </div>
+
+                        <div class="box-descricao">
+                            <h3>Descrição do Veículo</h3>
+                            <div class="texto-descricao" id="textoDescricao">${v.descricao || 'Nenhuma descrição detalhada informada.'}</div>
+                            <button type="button" class="btn-ler-mais" id="btnLerMais" onclick="alternarDescricao()" hidden>
+                                <span id="lerMaisLabel">Ler mais</span>
+                                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="6 9 12 15 18 9"/></svg>
+                            </button>
+                        </div>
                     </div>
                 `;
+
+                requestAnimationFrame(() => {
+                    const desc = document.getElementById('textoDescricao');
+                    const btn = document.getElementById('btnLerMais');
+                    if (desc && btn) {
+                        desc.classList.add('truncado');
+                        if (desc.scrollHeight > desc.clientHeight + 4) {
+                            btn.hidden = false;
+                        } else {
+                            desc.classList.remove('truncado');
+                        }
+                    }
+                });
 
             } catch (erro) {
                 console.error(erro);
                 container.innerHTML = `<div class="mensagem-alerta"><svg class="icon-alerta" width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10.29 3.86 1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>Erro ao carregar detalhes do veículo.</div>`;
             }
+        }
+
+        window.alternarDescricao = function() {
+            const desc = document.getElementById('textoDescricao');
+            const btn = document.getElementById('btnLerMais');
+            const label = document.getElementById('lerMaisLabel');
+            if (!desc || !btn) return;
+            const truncar = !desc.classList.contains('truncado');
+            desc.classList.toggle('truncado', truncar);
+            btn.classList.toggle('aberto', !truncar);
+            label.textContent = truncar ? 'Ler mais' : 'Ler menos';
         }
 
         window.trocarFoto = function(src, elemento, idx) {
