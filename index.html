@@ -12,12 +12,14 @@
             --wm-red: #d30000;
             --wm-red-hover: #b00000;
             --wm-dark: #0d0d0d;
-            --wm-gray-bg: #f4f6f9;
+            --wm-gray-bg: #f5f6f8;
             --wm-card-bg: #ffffff;
-            --wm-text-dark: #1a1a1a;
+            --wm-text-dark: #151515;
             --wm-text-muted: #666666;
-            --wm-border: #e0e0e0;
-            --border-radius: 8px;
+            --wm-border: #e3e5e8;
+            --border-radius: 10px;
+            --shadow-soft: 0 4px 18px rgba(0,0,0,0.06);
+            --shadow-card: 0 8px 24px rgba(0,0,0,0.07);
             --navbar-h: 68px;
         }
 
@@ -40,10 +42,10 @@
 
         /* ---------- Navbar Minimalista ---------- */
         .navbar {
-            background-color: rgba(13, 13, 13, 0.98);
-            backdrop-filter: blur(10px);
+            background-color: rgba(10, 10, 10, 0.97);
+            backdrop-filter: blur(14px);
             -webkit-backdrop-filter: blur(10px);
-            border-bottom: 1px solid var(--wm-border);
+            border-bottom: 1px solid rgba(255,255,255,0.10);
             position: sticky; top: 0; z-index: 30;
         }
 
@@ -54,7 +56,7 @@
             gap: 20px;
         }
 
-        .logo-img { height: 34px; width: auto; object-fit: contain; display: block; }
+        .logo-img { height: 38px; width: auto; object-fit: contain; display: block; }
         .navbar a.logo-link { display: inline-flex; align-items: center; }
 
         .navbar-links { display: flex; align-items: center; gap: 28px; }
@@ -89,24 +91,28 @@
             display: inline-flex; align-items: center; gap: 8px;
             background: var(--wm-red); color: white;
             font-size: 0.86rem; font-weight: 700;
-            padding: 10px 16px; border-radius: 6px; white-space: nowrap;
+            padding: 10px 17px; border-radius: 7px; white-space: nowrap;
+            box-shadow: 0 4px 12px rgba(211,0,0,0.20);
             transition: background-color 0.15s ease;
         }
         .btn-navbar-whats .icon { width: 16px; height: 16px; }
         .btn-navbar-whats:hover, .btn-navbar-whats:focus-visible { background: var(--wm-red-hover); }
 
         @media (max-width: 640px) {
+            .navbar-content { padding: 0 14px; gap: 12px; }
+            .logo-img { height: 34px; }
             .navbar-nav { display: none; }
             .btn-navbar-whats span { display: none; }
-            .btn-navbar-whats { padding: 10px; }
+            .btn-navbar-whats { padding: 10px 11px; }
+            .page-header { padding: 28px 0 18px; }
         }
 
         /* ---------- Layout ---------- */
         .container { max-width: 1200px; margin: 0 auto; padding: 0 16px; flex: 1; width: 100%; }
 
-        .page-header { padding: 32px 0 20px; }
+        .page-header { padding: 38px 0 22px; }
         .page-header h1 {
-            font-size: clamp(1.5rem, 4vw, 2rem);
+            font-size: clamp(1.65rem, 4vw, 2.15rem);
             font-weight: 800;
             letter-spacing: -0.01em;
         }
@@ -114,11 +120,11 @@
 
         /* ---------- Search / filter bar ---------- */
         .busca-card {
-            background: white; padding: 16px; border-radius: var(--border-radius);
-            border: 1px solid var(--wm-border); margin-bottom: 18px;
+            background: white; padding: 14px; border-radius: var(--border-radius);
+            border: 1px solid var(--wm-border); margin-bottom: 22px;
             display: grid; grid-template-columns: 2fr 1fr; gap: 12px; align-items: center;
             position: sticky; top: var(--navbar-h); z-index: 20;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+            box-shadow: var(--shadow-soft);
         }
 
         .campo-busca-wrapper { position: relative; display: flex; align-items: center; }
@@ -174,16 +180,21 @@
             background-color: var(--wm-card-bg); border-radius: var(--border-radius);
             border: 1px solid var(--wm-border); overflow: hidden; display: flex;
             flex-direction: column; transition: transform 0.2s ease, box-shadow 0.2s ease;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.03);
             position: relative; text-decoration: none; color: inherit;
         }
 
         .card-carro:hover, .card-carro:focus-visible {
-            transform: translateY(-4px); box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+            transform: translateY(-5px); box-shadow: var(--shadow-card);
         }
         .card-carro:focus-visible { outline: 2px solid var(--wm-red); outline-offset: 2px; }
 
         .img-wrapper { position: relative; width: 100%; aspect-ratio: 4 / 3; background-color: #111; }
-        .img-wrapper img { width: 100%; height: 100%; object-fit: cover; display: block; }
+        .img-wrapper img {
+            width: 100%; height: 100%; object-fit: cover; display: block;
+            transition: transform 0.35s ease;
+        }
+        .card-carro:hover .img-wrapper img { transform: scale(1.025); }
 
         .badge-status-card {
             position: absolute; top: 10px; right: 10px; background: rgba(0,0,0,0.8);
@@ -260,7 +271,7 @@
             align-items: center;
             justify-content: space-between;
             gap: 20px;
-            padding: 32px 0;
+            padding: 34px 0;
             border-bottom: 1px solid rgba(255, 255, 255, 0.08);
         }
 
@@ -326,7 +337,7 @@
         .footer-links { list-style: none; }
         .footer-links li { margin-bottom: 10px; }
         .footer-links a { color: #9aa0a6; font-size: 0.88rem; transition: color 0.2s ease; }
-        .footer-links a:hover { color: #ffffff; }
+        .footer-links a:hover { color: #ffffff; } .footer-links a span { margin-left: 4px; opacity: 0.75; }
 
         .footer-info-item {
             display: flex;
@@ -334,7 +345,7 @@
             gap: 10px;
             margin-bottom: 12px;
             font-size: 0.88rem;
-            line-height: 1.4;
+            line-height: 1.5;
         }
 
         .footer-info-item a { color: #9aa0a6; transition: color 0.2s ease; }
@@ -439,7 +450,7 @@
                     <h4 class="footer-title">Navegação</h4>
                     <ul class="footer-links">
                         <li><a href="#estoque">Estoque completo</a></li>
-                        <li><a href="https://wa.me/554899872525?text=Ol%C3%A1%21%20Vi%20o%20site%20da%20Mazo%20Autom%C3%B3veis%20e%20gostaria%20de%20mais%20informa%C3%A7%C3%B5es%20sobre%20os%20ve%C3%ADculos%20dispon%C3%ADveis." target="_blank" rel="noopener">Fale conosco</a></li>
+                        <li><a href="https://wa.me/554899872525?text=Ol%C3%A1%21%20Vi%20o%20site%20da%20Mazo%20Autom%C3%B3veis%20e%20gostaria%20de%20mais%20informa%C3%A7%C3%B5es%20sobre%20os%20ve%C3%ADculos%20dispon%C3%ADveis." target="_blank" rel="noopener">Fale conosco <span aria-hidden="true">↗</span></a></li>
                     </ul>
                 </div>
 
