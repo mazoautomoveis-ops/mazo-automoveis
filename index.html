@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-    <meta name="description" content="Mazo Automóveis - Estoque de veículos novos e seminovos em Braço do Norte - SC. Confira nossas ofertas.">
+    <meta name="description" content="Mazo Automóveis - Confira nosso estoque de veículos em Braço do Norte - SC.">
     <title>Mazo Automóveis - Estoque de Veículos</title>
 
     <style>
@@ -378,6 +378,97 @@
             .footer-bottom { flex-direction: column; gap: 10px; text-align: center; }
         }
 
+
+        /* ---------- Refinamento visual / versão premium ---------- */
+        .page-header {
+            display: flex; justify-content: space-between; align-items: flex-end; gap: 28px;
+            padding: 46px 0 28px;
+        }
+        .page-header-copy { max-width: 720px; }
+        .eyebrow {
+            display: inline-block; color: var(--wm-red); font-size: 0.72rem; font-weight: 800;
+            letter-spacing: 0.14em; margin-bottom: 8px;
+        }
+        .page-header h1 { font-size: clamp(1.9rem, 4vw, 2.7rem); line-height: 1.08; letter-spacing: -0.025em; }
+        .page-header p { max-width: 620px; font-size: 1rem; line-height: 1.55; margin-top: 10px; }
+        .header-location {
+            display: inline-flex; align-items: center; gap: 8px; padding: 10px 13px;
+            border: 1px solid var(--wm-border); background: #fff; border-radius: 8px;
+            color: var(--wm-text-muted); font-size: 0.82rem; font-weight: 650; white-space: nowrap;
+            box-shadow: 0 4px 14px rgba(0,0,0,0.035); transition: all .18s ease;
+        }
+        .header-location .icon { width: 16px; height: 16px; color: var(--wm-red); }
+        .header-location:hover { border-color: #c9ccd1; color: var(--wm-text-dark); transform: translateY(-1px); }
+
+        .busca-card {
+            padding: 16px; gap: 14px; grid-template-columns: minmax(0, 2fr) minmax(190px, 1fr) auto;
+            border-radius: 12px; box-shadow: 0 10px 28px rgba(0,0,0,0.06);
+        }
+        .filtro-campo label { display: block; font-size: 0.72rem; font-weight: 750; color: #777b80; margin: 0 0 6px 2px; }
+        .form-control { min-height: 44px; padding-top: 11px; padding-bottom: 11px; border-radius: 7px; }
+        .btn-limpar-filtros {
+            align-self: end; min-height: 44px; padding: 0 14px; border: 1px solid var(--wm-border);
+            background: #fff; color: #555b61; border-radius: 7px; font: inherit; font-size: 0.82rem;
+            font-weight: 700; cursor: pointer; transition: all .18s ease; white-space: nowrap;
+        }
+        .btn-limpar-filtros:hover { border-color: #bbbfc4; color: var(--wm-red); background: #fafafa; }
+
+        .resultado-contagem { margin: 2px 2px 14px; font-size: 0.82rem; }
+        .grid-veiculos {
+            grid-template-columns: repeat(3, minmax(0, 1fr));
+            gap: 22px; margin-bottom: 52px;
+        }
+        .card-carro {
+            border-radius: 12px; box-shadow: 0 3px 12px rgba(0,0,0,0.045);
+            transition: transform .22s ease, box-shadow .22s ease, border-color .22s ease;
+        }
+        .card-carro:hover, .card-carro:focus-visible {
+            transform: translateY(-4px); box-shadow: 0 14px 30px rgba(0,0,0,0.10); border-color: #d7d9dc;
+        }
+        /* Todas as fotos dos anúncios ocupam exatamente a mesma área 4:3.
+           object-fit: cover evita que fotos verticais/horizontais alterem o layout. */
+        .img-wrapper { aspect-ratio: 4 / 3; min-height: 0; overflow: hidden; background: #e9eaec; }
+        .img-wrapper img { object-fit: cover; }
+        .badge-status-card { top: 12px; right: 12px; padding: 5px 9px; border-radius: 5px; font-size: .68rem; }
+        .badge-fotos-count { bottom: 12px; right: 12px; padding: 4px 8px; border-radius: 5px; }
+        .card-body { padding: 15px 16px 17px; min-height: 112px; }
+        .card-titulo { font-size: clamp(1rem, 1.5vw, 1.12rem); margin-bottom: 5px; }
+        .card-detalhes-linha { font-size: .82rem; margin-bottom: 8px; }
+        .card-preco { font-size: clamp(1.12rem, 1.8vw, 1.35rem); padding-top: 7px; }
+
+        .footer { margin-top: 10px; }
+        .footer-cta { padding: 38px 0; }
+        .footer-grid { padding: 42px 0; }
+        .footer-title { font-size: .82rem; text-transform: uppercase; letter-spacing: .07em; }
+        .footer-links a:hover, .footer-info-item a:hover { color: var(--wm-red); }
+
+        @media (max-width: 980px) {
+            .grid-veiculos { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+            .busca-card { grid-template-columns: minmax(0, 1.5fr) minmax(180px, 1fr) auto; }
+        }
+        @media (max-width: 768px) {
+            .page-header { padding: 34px 0 22px; align-items: flex-start; }
+            .header-location { display: none; }
+            .busca-card { grid-template-columns: 1fr; position: static; }
+            .btn-limpar-filtros { width: 100%; }
+        }
+        @media (max-width: 620px) {
+            .container { padding: 0 12px; }
+            .page-header h1 { font-size: 1.75rem; }
+            .page-header p { font-size: .9rem; }
+            .grid-veiculos { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 11px; }
+            .card-body { padding: 11px 11px 13px; min-height: 100px; }
+            .card-titulo { font-size: .88rem; }
+            .card-detalhes-linha { font-size: .72rem; margin-bottom: 5px; }
+            .card-preco { font-size: 1rem; }
+            .badge-status-card { top: 7px; right: 7px; font-size: .58rem; padding: 4px 6px; }
+            .badge-fotos-count { bottom: 7px; right: 7px; font-size: .65rem; }
+        }
+        @media (max-width: 380px) {
+            .grid-veiculos { grid-template-columns: 1fr; gap: 14px; }
+            .card-body { min-height: 0; }
+        }
+
     </style>
 </head>
 
@@ -405,18 +496,32 @@
 
     <div class="container" id="estoque">
         <div class="page-header">
-            <h1>Estoque de Veículos</h1>
-            <p>Confira os veículos disponíveis para venda</p>
+            <div class="page-header-copy">
+                <span class="eyebrow">MAZO AUTOMÓVEIS</span>
+                <h1>Encontre seu próximo veículo</h1>
+                <p>Confira nosso estoque de veículos disponíveis e encontre o modelo ideal para você.</p>
+            </div>
+            <a class="header-location" href="https://www.google.com/maps/search/?api=1&query=SC-370%2C+2470+-+Rio+Bonito%2C+Bra%C3%A7o+do+Norte+-+SC" target="_blank" rel="noopener">
+                <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+                <span>Braço do Norte - SC</span>
+            </a>
         </div>
 
         <div class="busca-card">
-            <div class="campo-busca-wrapper">
-                <span class="icone-busca" aria-hidden="true"><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg></span>
-                <input type="text" id="inputBusca" class="form-control" placeholder="Buscar por modelo ou palavra-chave..." inputmode="search" oninput="filtrarVeiculos()" aria-label="Buscar veículo">
+            <div class="filtro-campo">
+                <label for="inputBusca">Buscar veículo</label>
+                <div class="campo-busca-wrapper">
+                    <span class="icone-busca" aria-hidden="true"><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg></span>
+                    <input type="text" id="inputBusca" class="form-control" placeholder="Modelo, marca ou palavra-chave..." inputmode="search" oninput="filtrarVeiculos()" aria-label="Buscar veículo">
+                </div>
             </div>
-            <select id="selectMarca" class="form-control" onchange="filtrarVeiculos()" aria-label="Filtrar por marca">
-                <option value="todas">Todas as Marcas</option>
-            </select>
+            <div class="filtro-campo">
+                <label for="selectMarca">Filtrar por marca</label>
+                <select id="selectMarca" class="form-control" onchange="filtrarVeiculos()" aria-label="Filtrar por marca">
+                    <option value="todas">Todas as Marcas</option>
+                </select>
+            </div>
+            <button type="button" class="btn-limpar-filtros" onclick="limparFiltros()">Limpar filtros</button>
         </div>
 
         <div id="resultadoContagem" class="resultado-contagem" hidden></div>
@@ -567,6 +672,13 @@
             });
         }
 
+
+        function limparFiltros() {
+            document.getElementById("inputBusca").value = "";
+            document.getElementById("selectMarca").value = "todas";
+            filtrarVeiculos();
+        }
+
         function filtrarVeiculos() {
             clearTimeout(debounceTimer);
             debounceTimer = setTimeout(aplicarFiltro, 120);
@@ -579,7 +691,8 @@
             const marcaSelecionada = document.getElementById("selectMarca").value;
 
             let filtrados = todosVeiculos.filter(v => {
-                const textoMatch = `${v.marca || ''} ${v.modelo || ''}`.toLowerCase().includes(busca);
+                const textoBusca = `${v.marca || ''} ${v.modelo || ''} ${v.cor || ''} ${v.ano || ''}`.toLowerCase();
+                const textoMatch = textoBusca.includes(busca);
                 const marcaMatch = marcaSelecionada === 'todas' ? true : (v.marca === marcaSelecionada);
                 const statusMatch = v.status !== 'vendido';
                 return textoMatch && marcaMatch && statusMatch;
